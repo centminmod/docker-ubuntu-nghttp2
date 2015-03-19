@@ -1,7 +1,7 @@
 FROM ubuntu
 MAINTAINER George Liu <https://github.com/centminmod/docker-ubuntu-nghttp2>
 # Setup HTTP/2 nghttp2 on Ubuntu 14.x
-RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.4-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove     
+RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y bsdmainutils apt-file mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.4-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove     
 
 RUN cd /usr/local/src; git clone --depth 1 https://github.com/openssl/openssl.git
 RUN cd /usr/local/src/openssl && git checkout -b OpenSSL_1_0_2-stable; ./config shared enable-threads zlib enable-ec_nistp_64_gcc_128 --prefix=/usr/local/http2-15 && make && make install && echo "/usr/local/http2-15/lib" > /etc/ld.so.conf.d/openssl.conf && ldconfig && make clean
@@ -12,10 +12,13 @@ RUN cd /usr/local/src/spdylay && autoreconf -i && automake && autoconf && ./conf
 RUN cd /usr/local/src; git clone --depth 1 https://github.com/tatsuhiro-t/nghttp2.git
 RUN cd /usr/local/src/nghttp2 && autoreconf -i && automake && autoconf && ./configure --enable-app OPENSSL_LIBS='-L/usr/local/http2-15/lib -lssl -lcrypto' && make && make install && ldconfig && make clean
 
+RUN INSTALL_DIR=/opt; cd $INSTALL_DIR && git clone https://github.com/jvehent/cipherscan && cd cipherscan && chmod 0700 cipherscan && ln -s ${INSTALL_DIR}/cipherscan/cipherscan /usr/bin/cipherscan
+
 RUN ls -lah /usr/local/bin/ | egrep 'nghttp|h2load' && echo "/usr/local/http2-15/bin/openssl version"
 
 RUN echo && echo "check if your HTTP/2 enabled web host supports ALPN & NPN TLS extensions" && echo "if testing a HTTP/2 server on non-standard port other than 443, ensure" && echo "target HTTP/2 server's firewall has allowed your docker image's host system" && echo "ip address to connect to that non-standard port e.g. 8081 for h2o server" && echo && echo "/usr/local/http2-15/bin/openssl s_client -alpn h2-14 -host yourhttp2_enabledhostname -port 8081" && echo "/usr/local/http2-15/bin/openssl s_client -nextprotoneg h2-14 -host yourhttp2_enabledhostname -port 8081"
 
+# /usr/bin/cipherscan
 # /usr/local/bin/nghttp --version
 # /usr/local/bin/nghttpd --version
 # /usr/local/bin/nghttpx --version
