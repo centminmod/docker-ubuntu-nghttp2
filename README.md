@@ -204,9 +204,8 @@ Example against OpenLiteSpeed 1.3.8 server with HTTP/2 web site on port 8082
 OpenSSL 1.0.2-chacha supported cipher list
 ===================================
 
-    /usr/local/http2-15/bin/openssl version
-    OpenSSL 1.0.2-chacha (1.0.2b-dev)
-    root@42eb6d99e91b:/usr/local/src/openssl# /usr/local/http2-15/bin/openssl ciphers -l -V "ALL:COMPLEMENTOFALL"
+    /usr/local/src/openssl# /usr/local/http2-15/bin/openssl ciphers -l -V "ALL:COMPLEMENTOFALL"
+    
               0xCC,0x14 - ECDHE-ECDSA-CHACHA20-POLY1305 TLSv1.2 Kx=ECDH     Au=ECDSA Enc=ChaCha20(256) Mac=AEAD
               0xCC,0x13 - ECDHE-RSA-CHACHA20-POLY1305 TLSv1.2 Kx=ECDH     Au=RSA  Enc=ChaCha20(256) Mac=AEAD
               0xCC,0x15 - DHE-RSA-CHACHA20-POLY1305 TLSv1.2 Kx=DH       Au=RSA  Enc=ChaCha20(256) Mac=AEAD
