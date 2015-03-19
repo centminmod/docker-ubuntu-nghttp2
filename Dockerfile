@@ -10,7 +10,7 @@ RUN mkdir /usr/local/src/nghttp2_libevent21 && cd /usr/local/src/nghttp2_libeven
 tar xzf libevent-2.0.21-stable.tar.gz && cd libevent-2.0.21-stable && CFLAGS=-I/usr/local/http2-15/include CXXFLAGS=-I/usr/local/http2-15/include LDFLAGS=-L/usr/local/http2-15/lib ./configure --prefix=/usr/local/http2-15 && make && make install && make clean && echo "/usr/local/http2-15/lib/" > /etc/ld.so.conf.d/libevent-i386.conf && ldconfig
 
 RUN cd /usr/local/src; git clone --depth 1 https://github.com/tatsuhiro-t/spdylay.git
-RUN cd /usr/local/src/spdylay && autoreconf -i && automake && autoconf && ./configure OPENSSL_LIBS='-L/usr/local/http2-15/lib -lssl -lcrypto -levent' && LIBEVENT_OPENSSL_CFLAGS="-I/usr/local/http2-15/include" LIBEVENT_OPENSSL_LIBS="-L/usr/local/http2-15/lib" && make && make install && make clean
+RUN cd /usr/local/src/spdylay && autoreconf -i && automake && autoconf && ./configure OPENSSL_LIBS='-L/usr/local/http2-15/lib -lssl -lcrypto -levent -levent_openssl' && make && make install && make clean
 
 RUN cd /usr/local/src; git clone --depth 1 https://github.com/tatsuhiro-t/nghttp2.git
 RUN cd /usr/local/src/nghttp2 && autoreconf -i && automake && autoconf && ./configure --enable-app OPENSSL_LIBS='-L/usr/local/http2-15/lib -lssl -lcrypto' && make && make install && ldconfig && make clean
