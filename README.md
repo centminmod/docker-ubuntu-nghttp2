@@ -2,10 +2,17 @@ Docker based image for [nghttp2 HTTP/2](https://nghttp2.org/) C library client, 
 
 Used Ubuntu instead of CentOS as the nghttp2 build and compile software version requirements were too high a version for CentOS YUM packages and source compiling those higher software versions would take almost 2 hours to compile.
 
-[Custom OpenSSL 1.0.2 version](https://github.com/PeterMosmans/openssl) with chacha20_poly1305 cipher patch etc is compiled for enabling ALPN TLS extension support. Default Ubuntu OpenSSL 1.0.1f only supports NPN TLS extension. The nghttp2 libraries support both ALPN & NPN extensions.
+[Custom OpenSSL 1.0.2a version](https://github.com/PeterMosmans/openssl) with chacha20_poly1305 cipher patch etc is compiled for enabling ALPN TLS extension support. Default Ubuntu OpenSSL 1.0.1f only supports NPN TLS extension. The nghttp2 libraries support both ALPN & NPN extensions.
 
     /usr/local/http2-15/bin/openssl version
     OpenSSL 1.0.2-chacha (1.0.2b-dev)
+
+Custom curl 7.41.0 version installed compiled against custom OpenSSL 1.0.2a
+
+    /usr/local/http2-15/bin/curl --version
+    curl 7.41.0 (x86_64-unknown-linux-gnu) libcurl/7.41.0 OpenSSL/1.0.2b zlib/1.2.8 nghttp2/0.7.8-DEV
+    Protocols: dict file ftp ftps gopher http https imap imaps pop3 pop3s rtsp smb smbs smtp smtps telnet tftp 
+    Features: IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets
 
 Also installed is [Cipherscan SSL tool](https://github.com/jvehent/cipherscan).
 
@@ -45,13 +52,14 @@ or if connecting to an already running docker image named `nghttp`
 
 #### nghttp2 Tools    
 
-nghttp2 client, server, proxy and h2load paths and OpenSSL custom compiled path
+nghttp2 client, server, proxy and h2load paths and OpenSSL / curl custom compiled path
 
     /usr/local/bin/nghttp --version
     /usr/local/bin/nghttpd --version
     /usr/local/bin/nghttpx --version
     /usr/local/bin/h2load --version
-    /usr/local/http2-15/bin/openssl version    
+    /usr/local/http2-15/bin/openssl version
+    /usr/local/http2-15/bin/curl --version
 
 check for ALPN extension support in h2o server - look for ALPN protocol: h2-14
 ===================================
@@ -201,7 +209,7 @@ Example against OpenLiteSpeed 1.3.8 server with HTTP/2 web site on port 8082
     [  0.551] send GOAWAY frame <length=8, flags=0x00, stream_id=0>
               (last_stream_id=0, error_code=NO_ERROR(0x00), opaque_data(0)=[])
 
-OpenSSL 1.0.2-chacha supported cipher list
+OpenSSL 1.0.2a-chacha supported cipher list
 ===================================
 
     /usr/local/http2-15/bin/openssl ciphers -l -V "ALL:COMPLEMENTOFALL"
