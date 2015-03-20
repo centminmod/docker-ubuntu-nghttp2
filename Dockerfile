@@ -1,7 +1,7 @@
 FROM ubuntu
 MAINTAINER George Liu <https://github.com/centminmod/docker-ubuntu-nghttp2>
 # Setup HTTP/2 nghttp2 on Ubuntu 14.x
-RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y tar bsdmainutils apt-file wget mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.4-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove     
+RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y nano tar bsdmainutils apt-file wget mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.4-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove     
 
 RUN cd /usr/local/src; git clone https://github.com/PeterMosmans/openssl.git --depth 1 -b 1.0.2-chacha
 RUN cd /usr/local/src/openssl; ./config shared enable-threads zlib experimental-jpake enable-md2 enable-rc5 enable-rfc3779 enable-gost enable-static-engine enable-ec_nistp_64_gcc_128 --prefix=/usr/local/http2-15 && make && make install && echo "/usr/local/http2-15/lib" > /etc/ld.so.conf.d/openssl.conf && ldconfig && make clean
