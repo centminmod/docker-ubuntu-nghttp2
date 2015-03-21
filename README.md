@@ -14,7 +14,7 @@ Custom curl 7.41.0 version installed compiled against custom OpenSSL 1.0.2a
     Protocols: dict file ftp ftps gopher http https imap imaps pop3 pop3s rtsp smb smbs smtp smtps telnet tftp 
     Features: IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets
 
-Also installed is [Cipherscan SSL tool](https://github.com/jvehent/cipherscan).
+Also installed [Cipherscan SSL tool](https://github.com/jvehent/cipherscan) and [testssl.sh tool](https://github.com/drwetter/testssl.sh).
 
 ### My Docker Hub repo
 
@@ -50,9 +50,13 @@ or if connecting to an already running docker image named `nghttp`
 
     cipherscan www.google.com:443
 
+#### testssl tool usage
+
+    testssl www.google.com:443
+
 #### nghttp2 Tools    
 
-nghttp2 client, server, proxy and h2load paths and OpenSSL / curl custom compiled path
+nghttp2 client, server, proxy and h2load paths and OpenSSL, curl custom compiled path & testssl tool
 
     /usr/local/bin/nghttp --version
     /usr/local/bin/nghttpd --version
@@ -60,6 +64,7 @@ nghttp2 client, server, proxy and h2load paths and OpenSSL / curl custom compile
     /usr/local/bin/h2load --version
     /usr/local/http2-15/bin/openssl version
     /usr/local/http2-15/bin/curl --version
+    /usr/bin/testssl --version
 
 check for ALPN extension support in h2o server - look for ALPN protocol: h2-14
 ===================================

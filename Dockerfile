@@ -18,6 +18,8 @@ RUN cd /usr/local/src; mkdir -p /usr/local/src/libcurl_static; cd /usr/local/src
 
 RUN INSTALL_DIR=/opt; cd $INSTALL_DIR && git clone https://github.com/jvehent/cipherscan && cd cipherscan && chmod 0700 cipherscan && ln -s ${INSTALL_DIR}/cipherscan/cipherscan /usr/bin/cipherscan
 
+RUN wget -cnv --no-check-certificate -O /usr/bin/testssl https://raw.githubusercontent.com/drwetter/testssl.sh/master/testssl.sh; chmod 0700 /usr/bin/testssl; export OPENSSL=/usr/local/http2-15/bin/openssl
+
 RUN ls -lah /usr/local/bin/ | egrep 'nghttp|h2load' && echo "/usr/local/http2-15/bin/openssl version"
 
 RUN echo && echo "check if your HTTP/2 enabled web host supports ALPN & NPN TLS extensions" && echo "if testing a HTTP/2 server on non-standard port other than 443, ensure" && echo "target HTTP/2 server's firewall has allowed your docker image's host system" && echo "ip address to connect to that non-standard port e.g. 8081 for h2o server" && echo && echo "/usr/local/http2-15/bin/openssl s_client -alpn h2-14 -host yourhttp2_enabledhostname -port 8081" && echo "/usr/local/http2-15/bin/openssl s_client -nextprotoneg h2-14 -host yourhttp2_enabledhostname -port 8081"
