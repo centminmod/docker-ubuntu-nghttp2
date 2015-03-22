@@ -18,7 +18,7 @@ RUN cd /usr/local/src; mkdir -p /usr/local/src/libcurl_static; cd /usr/local/src
 
 RUN INSTALL_DIR=/opt; cd $INSTALL_DIR && git clone https://github.com/jvehent/cipherscan && cd cipherscan && chmod 0700 cipherscan && ln -s ${INSTALL_DIR}/cipherscan/cipherscan /usr/bin/cipherscan
 
-RUN wget -cnv --no-check-certificate -O /usr/bin/testssl https://raw.githubusercontent.com/drwetter/testssl.sh/master/testssl.sh; chmod 0700 /usr/bin/testssl; export OPENSSL=/usr/local/http2-15/bin/openssl
+RUN wget -cnv --no-check-certificate -O /usr/bin/testssl https://raw.githubusercontent.com/drwetter/testssl.sh/master/testssl.sh; chmod 0700 /usr/bin/testssl; export OPENSSL=/usr/local/http2-15/bin/openssl; echo "export OPENSSL=/usr/local/http2-15/bin/openssl" >> /root/.bashrc 
 
 RUN ls -lah /usr/local/bin/ | egrep 'nghttp|h2load' && echo "/usr/local/http2-15/bin/openssl version"
 
