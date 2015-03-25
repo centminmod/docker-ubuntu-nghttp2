@@ -1,7 +1,9 @@
 FROM ubuntu:vivid
 MAINTAINER George Liu <https://github.com/centminmod/docker-ubuntu-nghttp2>
 # Setup HTTP/2 nghttp2 on Ubuntu 15.x
-RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y libboost-dev libboost-thread-dev nano tar bsdmainutils apt-file wget mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.4-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove     
+RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y bison mercurial libboost-dev libboost-thread-dev nano tar bsdmainutils apt-file wget mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.4-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove  
+
+# RUN echo "dash dash/sh boolean false" | debconf-set-selections && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash;  debconf-show dash   
 
 RUN cd /usr/local/src; git clone https://github.com/PeterMosmans/openssl.git --depth 1 -b 1.0.2-chacha
 RUN cd /usr/local/src/openssl; ./config shared enable-threads zlib experimental-jpake enable-md2 enable-rc5 enable-rfc3779 enable-gost enable-static-engine enable-ec_nistp_64_gcc_128 --prefix=/usr/local/http2-15 && make && make install && echo "/usr/local/http2-15/lib" > /etc/ld.so.conf.d/openssl.conf && ldconfig && make clean && echo "alias openssl='/usr/local/http2-15/bin/openssl'" >> /root/.bashrc && . /root/.bashrc ; alias openssl='/usr/local/http2-15/bin/openssl'
@@ -18,7 +20,10 @@ RUN cd /usr/local/src; mkdir -p /usr/local/src/libcurl_static; cd /usr/local/src
 
 RUN INSTALL_DIR=/opt; cd $INSTALL_DIR && git clone https://github.com/jvehent/cipherscan && cd cipherscan && chmod 0700 cipherscan && ln -s ${INSTALL_DIR}/cipherscan/cipherscan /usr/bin/cipherscan
 
-RUN wget -cnv --no-check-certificate -O /usr/bin/testssl https://raw.githubusercontent.com/drwetter/testssl.sh/master/testssl.sh; chmod 0700 /usr/bin/testssl; export OPENSSL=/usr/local/http2-15/bin/openssl; echo "export OPENSSL=/usr/local/http2-15/bin/openssl" >> /root/.bashrc 
+RUN wget -cnv --no-check-certificate -O /usr/bin/testssl https://raw.githubusercontent.com/drwetter/testssl.sh/master/testssl.sh; chmod 0700 /usr/bin/testssl; export OPENSSL=/usr/local/http2-15/bin/openssl; echo "export OPENSSL=/usr/local/http2-15/bin/openssl" >> /root/.bashrc
+
+ADD goinstall.sh /tmp/goinstall.sh
+RUN chmod 0700 /tmp/goinstall.sh; /tmp/goinstall.sh
 
 RUN ls -lah /usr/local/bin/ | egrep 'nghttp|h2load' && echo "/usr/local/http2-15/bin/openssl version"
 
@@ -31,3 +36,4 @@ RUN echo && echo "check if your HTTP/2 enabled web host supports ALPN & NPN TLS 
 # /usr/local/bin/h2load --version
 # /usr/local/http2-15/bin/openssl version
 # /usr/local/http2-15/bin/curl --version
+# ./h2spec -h
