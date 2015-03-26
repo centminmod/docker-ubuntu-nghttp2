@@ -35,7 +35,7 @@ ENV PATH /go/bin:$PATH
 RUN echo "export GOPATH=/go" >> /root/.bashrc; echo "export PATH=$PATH:$GOPATH/bin" >> /root/.bashrc; go env
 
 RUN export GOPATH=/go; export PATH=$PATH:$GOPATH/bin; mkdir -p $GOPATH/src/github.com/summerwind; mkdir -p $GOROOT/src/github.com/summerwind; 
-RUN cd $GOPATH/src/github.com/summerwind; pwd; git clone https://github.com/summerwind/h2spec.git; cd h2spec; /usr/src/go/bin/go get github.com/bradfitz/http2; /usr/src/go/bin/go build cmd/h2spec.go; echo "$GOPATH/src/github.com/summerwind/h2spec/h2spec --help"; echo "./h2spec -h localhost -p 8081 -t"
+RUN cd $GOPATH/src/github.com/summerwind; pwd; git clone https://github.com/summerwind/h2spec.git; cd h2spec; /usr/src/go/bin/go get github.com/bradfitz/http2; /usr/src/go/bin/go build cmd/h2spec.go; echo "$GOPATH/src/github.com/summerwind/h2spec/h2spec --help"; echo "$GOPATH/src/github.com/summerwind/h2spec/h2spec -h localhost -p 8081 -t"
 
 RUN ls -lah /usr/local/bin/ | egrep 'nghttp|h2load' && echo "/usr/local/http2-15/bin/openssl version"
 

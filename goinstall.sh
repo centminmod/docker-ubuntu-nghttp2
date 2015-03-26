@@ -7,7 +7,7 @@ source /root/.gvm/scripts/gvm
 /root/.gvm/bin/gvm version
 /root/.gvm/bin/gvm listall
 
-echo "dash dash/sh boolean true" | debconf-set-selections && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
+# echo "dash dash/sh boolean false" | debconf-set-selections && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 debconf-show dash
 
 /root/.gvm/bin/gvm install go1.4.2
