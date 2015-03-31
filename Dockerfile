@@ -22,6 +22,8 @@ RUN INSTALL_DIR=/opt; cd $INSTALL_DIR && git clone https://github.com/jvehent/ci
 
 RUN wget -cnv --no-check-certificate -O /usr/bin/testssl https://raw.githubusercontent.com/drwetter/testssl.sh/master/testssl.sh; chmod 0700 /usr/bin/testssl; export OPENSSL=/usr/local/http2-15/bin/openssl; echo "export OPENSSL=/usr/local/http2-15/bin/openssl" >> /root/.bashrc
 
+RUN cd /opt; git clone https://github.com/ssllabs/ssllabs-scan.git
+
 # ADD goinstall.sh /tmp/goinstall.sh
 # RUN chmod 0700 /tmp/goinstall.sh; /tmp/goinstall.sh
 

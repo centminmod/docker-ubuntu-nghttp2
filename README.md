@@ -14,7 +14,7 @@ Custom curl 7.41.0 version installed compiled against custom OpenSSL 1.0.2a
     Protocols: dict file ftp ftps gopher http https imap imaps pop3 pop3s rtsp smb smbs smtp smtps telnet tftp 
     Features: IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets
 
-Also installed [Cipherscan SSL tool](https://github.com/jvehent/cipherscan), [testssl.sh tool](https://github.com/drwetter/testssl.sh) and [h2spec](https://github.com/summerwind/h2spec).
+Also installed [Cipherscan SSL tool](https://github.com/jvehent/cipherscan), [testssl.sh tool](https://github.com/drwetter/testssl.sh), [h2spec](https://github.com/summerwind/h2spec) and [ssllabs-scan tool](https://github.com/ssllabs/ssllabs-scan/).
 
 ### My Docker Hub repo
 
@@ -53,6 +53,10 @@ or if connecting to an already running docker image named `nghttp`
 #### testssl tool usage
 
     testssl www.google.com:443
+
+#### ssllabs-scan tool usage
+
+    go run /opt/ssllabs-scan/ssllabs-scan.go https://www.google.com
 
 #### nghttp2 & Tools    
 
