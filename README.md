@@ -58,6 +58,10 @@ or if connecting to an already running docker image named `nghttp`
 
     go run /opt/ssllabs-scan/ssllabs-scan.go https://www.google.com
 
+or
+
+    go run /opt/ssllabs-scan/ssllabs-scan.go -json-flat https://www.google.com
+
 #### nghttp2 & Tools    
 
 nghttp2 client, server, proxy and h2load paths and OpenSSL, curl custom compiled path, h2spec & testssl tool
