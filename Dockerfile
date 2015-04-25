@@ -1,7 +1,7 @@
 FROM ubuntu:vivid
 MAINTAINER George Liu <https://github.com/centminmod/docker-ubuntu-nghttp2>
 # Setup HTTP/2 nghttp2 on Ubuntu 15.x
-RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y jq libc6-dev bison mercurial libboost-dev libboost-thread-dev nano tar bsdmainutils apt-file wget mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.4-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove  
+RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y iputils-ping jq libc6-dev bison mercurial libboost-dev libboost-thread-dev nano tar bsdmainutils apt-file wget mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.4-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove  
 
 # RUN echo "dash dash/sh boolean false" | debconf-set-selections && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash;  debconf-show dash   
 
@@ -50,4 +50,4 @@ RUN echo && echo "check if your HTTP/2 enabled web host supports ALPN & NPN TLS 
 # /usr/local/bin/h2load --version
 # /usr/local/http2-15/bin/openssl version
 # /usr/local/http2-15/bin/curl --version
-# ./h2spec -h
+# /go/src/github.com/summerwind/h2spec/h2spec -h
