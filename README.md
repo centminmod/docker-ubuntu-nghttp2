@@ -7,12 +7,12 @@ Used Ubuntu instead of CentOS as the nghttp2 build and compile software version 
     /usr/local/http2-15/bin/openssl version
     OpenSSL 1.0.2-chacha (1.0.2b-dev)
 
-Custom curl 7.42.1 version installed compiled against custom OpenSSL 1.0.2a
+Custom curl 7.43 DEV version installed compiled against custom OpenSSL 1.0.2a
 
-    /usr/local/http2-15/bin/curl --version
-    curl 7.42.1 (x86_64-unknown-linux-gnu) libcurl/7.42.1 OpenSSL/1.0.2b zlib/1.2.8 nghttp2/0.7.13-DEV
-    Protocols: dict file ftp ftps gopher http https imap imaps pop3 pop3s rtsp smb smbs smtp smtps telnet tftp 
-    Features: IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets
+    curl -V
+    curl 7.43.0-DEV (x86_64-unknown-linux-gnu) libcurl/7.43.0-DEV OpenSSL/1.0.2b zlib/1.2.8 libssh2/1.4.3 nghttp2/1.0.1-DEV
+    Protocols: dict file ftp ftps gopher http https imap imaps pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp 
+    Features: AsynchDNS IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets 
 
 Also installed [Cipherscan SSL tool](https://github.com/jvehent/cipherscan), [testssl.sh tool](https://github.com/drwetter/testssl.sh), [h2spec](https://github.com/summerwind/h2spec) and [ssllabs-scan tool](https://github.com/ssllabs/ssllabs-scan/).
 
@@ -78,11 +78,11 @@ nghttp2 client, server, proxy and h2load paths and OpenSSL, curl custom compiled
 check for ALPN extension support in h2o server - look for ALPN protocol: h2-14
 ===================================
 
-    /usr/local/http2-15/bin/openssl s_client -alpn h2-14 -host http2basedhost.com -port 8081
+    /usr/local/http2-15/bin/openssl s_client -alpn h2-14 -host h2ohttp2.centminmod.com -port 8081
     CONNECTED(00000003)
     
     ---
-    New, TLSv1/SSLv3, Cipher is ECDHE-RSA-AES256-GCM-SHA384
+    New, TLSv1/SSLv3, Cipher is ECDHE-RSA-CHACHA20-POLY1305
     Server public key is 2048 bit
     Secure Renegotiation IS supported
     Compression: NONE
@@ -90,137 +90,161 @@ check for ALPN extension support in h2o server - look for ALPN protocol: h2-14
     ALPN protocol: h2-14
     SSL-Session:
         Protocol  : TLSv1.2
-        Cipher    : ECDHE-RSA-AES256-GCM-SHA384
+        Cipher    : ECDHE-RSA-CHACHA20-POLY1305
 
 check for NPN extension support in h2o server - look for Next protocol: (1) h2-14
 ===================================
 
-    /usr/local/http2-15/bin/openssl s_client -nextprotoneg h2-14 -host http2basedhost.com -port 8081
+    /usr/local/http2-15/bin/openssl s_client -nextprotoneg h2-14 -host h2ohttp2.centminmod.com -port 8081
     
     ---
-    New, TLSv1/SSLv3, Cipher is ECDHE-RSA-AES256-GCM-SHA384
+    New, TLSv1/SSLv3, Cipher is ECDHE-RSA-CHACHA20-POLY1305
     Server public key is 2048 bit
     Secure Renegotiation IS supported
     Compression: NONE
     Expansion: NONE
     Next protocol: (1) h2-14
-    No ALPN negotiated    
+    No ALPN negotiated
 
 Example using nghttp2 client against h2o HTTP/2 server on port 8081
 ===================================
 
-    nghttp -nv https://http2basedhost.com:8081
+    nghttp -nv h2ohttp2.centminmod.com:8081
 
-    [  0.203] Connected
-    [  0.285][NPN] server offers:
+    [  0.230] Connected
+    [  0.332][NPN] server offers:
               * h2
               * h2-16
               * h2-14
     The negotiated protocol: h2
-    [  0.367] send SETTINGS frame <length=12, flags=0x00, stream_id=0>
+    [  0.411] send SETTINGS frame <length=12, flags=0x00, stream_id=0>
               (niv=2)
               [SETTINGS_MAX_CONCURRENT_STREAMS(0x03):100]
               [SETTINGS_INITIAL_WINDOW_SIZE(0x04):65535]
-    [  0.367] send HEADERS frame <length=45, flags=0x05, stream_id=1>
-              ; END_STREAM | END_HEADERS
-              (padlen=0)
+    [  0.411] send PRIORITY frame <length=5, flags=0x00, stream_id=3>
+              (dep_stream_id=0, weight=201, exclusive=0)
+    [  0.411] send PRIORITY frame <length=5, flags=0x00, stream_id=5>
+              (dep_stream_id=0, weight=101, exclusive=0)
+    [  0.411] send PRIORITY frame <length=5, flags=0x00, stream_id=7>
+              (dep_stream_id=0, weight=1, exclusive=0)
+    [  0.411] send PRIORITY frame <length=5, flags=0x00, stream_id=9>
+              (dep_stream_id=7, weight=1, exclusive=0)
+    [  0.411] send PRIORITY frame <length=5, flags=0x00, stream_id=11>
+              (dep_stream_id=3, weight=1, exclusive=0)
+    [  0.411] send HEADERS frame <length=51, flags=0x25, stream_id=13>
+              ; END_STREAM | END_HEADERS | PRIORITY
+              (padlen=0, dep_stream_id=11, weight=16, exclusive=0)
               ; Open new stream
               :method: GET
               :path: /
               :scheme: https
-              :authority: http2basedhost.com:8081
+              :authority: h2ohttp2.centminmod.com:8081
               accept: */*
               accept-encoding: gzip, deflate
-              user-agent: nghttp2/0.7.8-DEV
-    [  0.449] recv SETTINGS frame <length=18, flags=0x00, stream_id=0>
+              user-agent: nghttp2/1.0.1-DEV
+    [  0.488] recv SETTINGS frame <length=18, flags=0x00, stream_id=0>
               (niv=3)
               [SETTINGS_ENABLE_PUSH(0x02):0]
               [SETTINGS_MAX_CONCURRENT_STREAMS(0x03):100]
               [SETTINGS_INITIAL_WINDOW_SIZE(0x04):262144]
-    [  0.449] send SETTINGS frame <length=0, flags=0x01, stream_id=0>
+    [  0.488] recv SETTINGS frame <length=0, flags=0x01, stream_id=0>
               ; ACK
               (niv=0)
-    [  0.449] recv SETTINGS frame <length=0, flags=0x01, stream_id=0>
-              ; ACK
-              (niv=0)
-    [  0.449] recv (stream_id=1) :status: 200
-    [  0.449] recv (stream_id=1) server: h2o/1.1.2-alpha1
-    [  0.449] recv (stream_id=1) date: Thu, 19 Mar 2015 01:36:11 GMT
-    [  0.449] recv (stream_id=1) content-type: text/html
-    [  0.449] recv (stream_id=1) last-modified: Sat, 14 Mar 2015 19:15:28 GMT
-    [  0.449] recv (stream_id=1) etag: "550488d0-612"
-    [  0.449] recv (stream_id=1) vary: accept-encoding
-    [  0.449] recv (stream_id=1) content-encoding: gzip
-    [  0.449] recv (stream_id=1) cache-control: max-age=172800
-    [  0.449] recv (stream_id=1) strict-transport-security: max-age=31536000; includeSubDomains; preload
-    [  0.449] recv (stream_id=1) x-frame-options: deny
-    [  0.449] recv HEADERS frame <length=209, flags=0x04, stream_id=1>
+    [  0.488] recv (stream_id=13) :status: 200
+    [  0.488] recv (stream_id=13) server: h2o/1.2.1-alpha1
+    [  0.488] recv (stream_id=13) date: Tue, 19 May 2015 14:50:28 GMT
+    [  0.488] recv (stream_id=13) content-type: text/html; charset=utf-8
+    [  0.488] recv (stream_id=13) last-modified: Mon, 04 May 2015 11:07:11 GMT
+    [  0.488] recv (stream_id=13) etag: "554752df-1d3"
+    [  0.488] recv (stream_id=13) vary: accept-encoding
+    [  0.488] recv (stream_id=13) content-encoding: gzip
+    [  0.488] recv (stream_id=13) powered-by: h2o on centminmod.com
+    [  0.488] recv (stream_id=13) cache-control: public, must-revalidate, proxy-revalidate
+    [  0.488] recv (stream_id=13) link: </style.css>; rel=preload; as=stylesheet
+    [  0.488] recv (stream_id=13) link: </reset.css>; rel=preload; as=stylesheet
+    [  0.488] recv HEADERS frame <length=237, flags=0x04, stream_id=13>
               ; END_HEADERS
               (padlen=0)
               ; First response header
-    [  0.449] recv DATA frame <length=1554, flags=0x01, stream_id=1>
+    [  0.488] recv DATA frame <length=467, flags=0x01, stream_id=13>
               ; END_STREAM
-    [  0.449] send GOAWAY frame <length=8, flags=0x00, stream_id=0>
+    [  0.488] send SETTINGS frame <length=0, flags=0x01, stream_id=0>
+              ; ACK
+              (niv=0)
+    [  0.488] send GOAWAY frame <length=8, flags=0x00, stream_id=0>
               (last_stream_id=0, error_code=NO_ERROR(0x00), opaque_data(0)=[])
 
-Example against OpenLiteSpeed 1.3.8 server with HTTP/2 web site on port 8082
+Example against OpenLiteSpeed 1.4.8 server with HTTP/2 web site on port 8099
 ===================================
 
-    nghttp -nv https://http2basedhost.com:8082
+    nghttp -nv h2ohttp2.centminmod.com:8099
 
-    [  0.148] Connected
-    [  0.228][NPN] server offers:
+    [  0.143] Connected
+    [  0.220][NPN] server offers:
               * h2-14
               * spdy/3.1
               * spdy/3
               * spdy/2
               * http/1.1
     The negotiated protocol: h2-14
-    [  0.390] send SETTINGS frame <length=12, flags=0x00, stream_id=0>
+    [  0.313] send SETTINGS frame <length=12, flags=0x00, stream_id=0>
               (niv=2)
               [SETTINGS_MAX_CONCURRENT_STREAMS(0x03):100]
               [SETTINGS_INITIAL_WINDOW_SIZE(0x04):65535]
-    [  0.390] send HEADERS frame <length=45, flags=0x05, stream_id=1>
-              ; END_STREAM | END_HEADERS
-              (padlen=0)
+    [  0.313] send PRIORITY frame <length=5, flags=0x00, stream_id=3>
+              (dep_stream_id=0, weight=201, exclusive=0)
+    [  0.313] send PRIORITY frame <length=5, flags=0x00, stream_id=5>
+              (dep_stream_id=0, weight=101, exclusive=0)
+    [  0.313] send PRIORITY frame <length=5, flags=0x00, stream_id=7>
+              (dep_stream_id=0, weight=1, exclusive=0)
+    [  0.313] send PRIORITY frame <length=5, flags=0x00, stream_id=9>
+              (dep_stream_id=7, weight=1, exclusive=0)
+    [  0.313] send PRIORITY frame <length=5, flags=0x00, stream_id=11>
+              (dep_stream_id=3, weight=1, exclusive=0)
+    [  0.313] send HEADERS frame <length=51, flags=0x25, stream_id=13>
+              ; END_STREAM | END_HEADERS | PRIORITY
+              (padlen=0, dep_stream_id=11, weight=16, exclusive=0)
               ; Open new stream
               :method: GET
               :path: /
               :scheme: https
-              :authority: http2basedhost.com:8082
+              :authority: h2ohttp2.centminmod.com:8099
               accept: */*
               accept-encoding: gzip, deflate
-              user-agent: nghttp2/0.7.8-DEV
-    [  0.471] recv SETTINGS frame <length=12, flags=0x00, stream_id=0>
+              user-agent: nghttp2/1.0.1-DEV
+    [  0.392] recv SETTINGS frame <length=12, flags=0x00, stream_id=0>
               (niv=2)
               [SETTINGS_MAX_CONCURRENT_STREAMS(0x03):100]
               [SETTINGS_INITIAL_WINDOW_SIZE(0x04):65536]
-    [  0.471] recv WINDOW_UPDATE frame <length=4, flags=0x00, stream_id=0>
+    [  0.392] recv WINDOW_UPDATE frame <length=4, flags=0x00, stream_id=0>
               (window_size_increment=65535)
-    [  0.471] send SETTINGS frame <length=0, flags=0x01, stream_id=0>
+    [  0.392] recv SETTINGS frame <length=0, flags=0x01, stream_id=0>
               ; ACK
               (niv=0)
-    [  0.471] recv SETTINGS frame <length=0, flags=0x01, stream_id=0>
-              ; ACK
-              (niv=0)
-    [  0.471] recv (stream_id=1) :status: 200
-    [  0.471] recv (stream_id=1) etag: "ed9-5508fbfa-6633c"
-    [  0.471] recv (stream_id=1) last-modified: Wed, 18 Mar 2015 04:15:54 GMT
-    [  0.471] recv (stream_id=1) content-type: text/html
-    [  0.471] recv (stream_id=1) accept-ranges: bytes
-    [  0.471] recv (stream_id=1) date: Thu, 19 Mar 2015 01:38:18 GMT
-    [  0.471] recv (stream_id=1) server: LiteSpeed
-    [  0.471] recv (stream_id=1) content-encoding: gzip
-    [  0.471] recv (stream_id=1) vary: accept-encoding
-    [  0.471] recv HEADERS frame <length=109, flags=0x04, stream_id=1>
+    [  0.392] recv (stream_id=13) :status: 200
+    [  0.392] recv (stream_id=13) cache-control: public, max-age=900
+    [  0.392] recv (stream_id=13) cache-control: public, must-revalidate, proxy-revalidate
+    [  0.392] recv (stream_id=13) expires: Tue, 19 May 2015 15:06:49 GMT
+    [  0.392] recv (stream_id=13) etag: "59a-550c18e6-c0c59"
+    [  0.392] recv (stream_id=13) last-modified: Fri, 20 Mar 2015 12:56:06 GMT
+    [  0.392] recv (stream_id=13) content-type: text/html; charset=utf-8
+    [  0.392] recv (stream_id=13) content-length: 480
+    [  0.392] recv (stream_id=13) accept-ranges: bytes
+    [  0.392] recv (stream_id=13) content-encoding: gzip
+    [  0.392] recv (stream_id=13) vary: Accept-Encoding
+    [  0.392] recv (stream_id=13) date: Tue, 19 May 2015 14:51:49 GMT
+    [  0.392] recv (stream_id=13) server: LiteSpeed
+    [  0.392] recv HEADERS frame <length=196, flags=0x04, stream_id=13>
               ; END_HEADERS
               (padlen=0)
               ; First response header
-    [  0.471] recv DATA frame <length=10, flags=0x00, stream_id=1>
-    [  0.551] recv DATA frame <length=1568, flags=0x00, stream_id=1>
-    [  0.551] recv DATA frame <length=0, flags=0x01, stream_id=1>
+    [  0.392] recv DATA frame <length=480, flags=0x00, stream_id=13>
+    [  0.392] recv DATA frame <length=0, flags=0x01, stream_id=13>
               ; END_STREAM
-    [  0.551] send GOAWAY frame <length=8, flags=0x00, stream_id=0>
+    [  0.392] send SETTINGS frame <length=0, flags=0x01, stream_id=0>
+              ; ACK
+              (niv=0)
+    [  0.392] send GOAWAY frame <length=8, flags=0x00, stream_id=0>
               (last_stream_id=0, error_code=NO_ERROR(0x00), opaque_data(0)=[])
 
 OpenSSL 1.0.2a-chacha supported cipher list
