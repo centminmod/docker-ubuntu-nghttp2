@@ -1,7 +1,7 @@
 FROM ubuntu:vivid
 MAINTAINER George Liu <https://github.com/centminmod/docker-ubuntu-nghttp2>
 # Setup HTTP/2 nghttp2 on Ubuntu 15.x
-RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y dnsutils libssh2-1 libssh2-1-dev iputils-ping jq libc6-dev bison mercurial libboost-dev libboost-thread-dev nano tar bsdmainutils apt-file wget mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.4-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove  
+RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y python-setuptools dnsutils libssh2-1 libssh2-1-dev iputils-ping jq libc6-dev bison mercurial libboost-dev libboost-thread-dev nano tar bsdmainutils apt-file wget mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.4-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove  
 
 # RUN echo "dash dash/sh boolean false" | debconf-set-selections && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash;  debconf-show dash   
 
@@ -14,7 +14,7 @@ RUN cd /usr/local/src; git clone --depth 1 https://github.com/tatsuhiro-t/spdyla
 RUN cd /usr/local/src/spdylay && autoreconf -i && automake && autoconf && ./configure OPENSSL_LIBS='-L/usr/local/http2-15/lib -lssl -lcrypto -levent -levent_openssl' && make -j2 && make install && make clean
 
 RUN cd /usr/local/src; git clone --depth 1 https://github.com/tatsuhiro-t/nghttp2.git
-RUN cd /usr/local/src/nghttp2 && autoreconf -i && automake && autoconf && ./configure --enable-app --enable-asio-lib OPENSSL_LIBS='-L/usr/local/http2-15/lib -lssl -lcrypto' && make -j2 && make install && ldconfig && make clean
+RUN cd /usr/local/src/nghttp2 && autoreconf -i && automake && autoconf && PKG_CONFIG_PATH=/usr/local/http2-15/lib/pkgconfig ./configure --enable-app --enable-asio-lib && make -j2 && make install && ldconfig && make clean
 
 # RUN cd /usr/local/src; mkdir -p /usr/local/src/libcurl_static; cd /usr/local/src/libcurl_static && wget -cnv http://curl.haxx.se/download/curl-7.44.0.tar.gz && tar xzf curl-7.44.0.tar.gz && cd /usr/local/src/libcurl_static/curl-7.44.0 && ./configure --prefix=/usr/local/http2-15 --with-ssl=/usr/local/http2-15 --with-libssh2 --disable-static --enable-threaded-resolver && make -j2 && make install && echo "/usr/local/http2-15/lib" > /etc/ld.so.conf.d/curl.conf && ldconfig && echo "alias curl='/usr/local/http2-15/bin/curl'" >> /root/.bashrc && . /root/.bashrc ; alias curl='/usr/local/http2-15/bin/curl'; /usr/local/http2-15/bin/curl --version;
 
@@ -40,6 +40,8 @@ RUN echo "export GOPATH=/go" >> /root/.bashrc; echo "export PATH=$PATH:$GOPATH/b
 
 RUN export GOPATH=/go; export PATH=$PATH:$GOPATH/bin; mkdir -p $GOPATH/src/github.com/summerwind; mkdir -p $GOROOT/src/github.com/summerwind; 
 RUN cd $GOPATH/src/github.com/summerwind; pwd; git clone https://github.com/summerwind/h2spec.git; cd h2spec; /usr/src/go/bin/go get github.com/bradfitz/http2; /usr/src/go/bin/go build cmd/h2spec.go; echo "$GOPATH/src/github.com/summerwind/h2spec/h2spec --help"; echo "$GOPATH/src/github.com/summerwind/h2spec/h2spec -h localhost -p 8081 -t"
+
+RUN cd ~; go get github.com/bradfitz/http2/h2i
 
 RUN ls -lah /usr/local/bin/ | egrep 'nghttp|h2load' && echo "/usr/local/http2-15/bin/openssl version"
 
