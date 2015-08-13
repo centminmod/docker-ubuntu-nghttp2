@@ -2,7 +2,7 @@ Docker based image for [nghttp2 HTTP/2](https://nghttp2.org/) C library client, 
 
 Used Ubuntu instead of CentOS as the nghttp2 build and compile software version requirements were too high a version for CentOS YUM packages and source compiling those higher software versions would take almost 2 hours to compile.
 
-[Custom OpenSSL 1.0.2a version](https://github.com/PeterMosmans/openssl) with chacha20_poly1305 cipher patch etc is compiled for enabling ALPN TLS extension support. Default Ubuntu OpenSSL 1.0.1f only supports NPN TLS extension. The nghttp2 libraries support both ALPN & NPN extensions.
+[Custom OpenSSL 1.0.2e version](https://github.com/PeterMosmans/openssl) with chacha20_poly1305 cipher patch etc is compiled for enabling ALPN TLS extension support. Default Ubuntu OpenSSL 1.0.1f only supports NPN TLS extension. The nghttp2 libraries support both ALPN & NPN extensions.
 
     /usr/local/http2-15/bin/openssl version
     OpenSSL 1.0.2-chacha (1.0.2e-dev)
