@@ -7,10 +7,10 @@ Used Ubuntu instead of CentOS as the nghttp2 build and compile software version 
     /usr/local/http2-15/bin/openssl version
     OpenSSL 1.0.2-chacha (1.0.2b-dev)
 
-Custom curl 7.44 version installed compiled against custom OpenSSL 1.0.2a
+Custom curl 7.45 DEV version installed compiled against custom OpenSSL 1.0.2e
 
     curl -V
-    curl 7.43.0-DEV (x86_64-unknown-linux-gnu) libcurl/7.43.0-DEV OpenSSL/1.0.2b zlib/1.2.8 libssh2/1.4.3 nghttp2/1.0.1-DEV
+    curl 7.45.0-DEV (x86_64-unknown-linux-gnu) libcurl/7.45.0-DEV OpenSSL/1.0.2e zlib/1.2.8 libssh2/1.4.3 nghttp2/1.2.1-DEV
     Protocols: dict file ftp ftps gopher http https imap imaps pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp 
     Features: AsynchDNS IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets 
 
