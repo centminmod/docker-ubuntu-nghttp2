@@ -5,7 +5,7 @@ Used Ubuntu instead of CentOS as the nghttp2 build and compile software version 
 [Custom OpenSSL 1.0.2a version](https://github.com/PeterMosmans/openssl) with chacha20_poly1305 cipher patch etc is compiled for enabling ALPN TLS extension support. Default Ubuntu OpenSSL 1.0.1f only supports NPN TLS extension. The nghttp2 libraries support both ALPN & NPN extensions.
 
     /usr/local/http2-15/bin/openssl version
-    OpenSSL 1.0.2-chacha (1.0.2b-dev)
+    OpenSSL 1.0.2-chacha (1.0.2e-dev)
 
 Custom curl 7.45 DEV version installed compiled against custom OpenSSL 1.0.2e
 
@@ -79,12 +79,27 @@ nghttp2 client, server, proxy and h2load paths and OpenSSL, curl custom compiled
     /usr/bin/testssl --version
     /go/src/github.com/summerwind/h2spec/h2spec --help
 
+check for ALPN extension support in Nginx HTTP/2 patched Centmin Mod Nginx LEMP stack server - look for ALPN protocol: h2
+===================================
+
+    /usr/local/http2-15/bin/openssl s_client -alpn h2 -host centminmod.com -port 443
+
+    ---
+    New, TLSv1/SSLv3, Cipher is ECDHE-RSA-CHACHA20-POLY1305
+    Server public key is 2048 bit
+    Secure Renegotiation IS supported
+    Compression: NONE
+    Expansion: NONE
+    ALPN protocol: h2
+    SSL-Session:
+        Protocol  : TLSv1.2
+        Cipher    : ECDHE-RSA-CHACHA20-POLY1305    
+
 check for ALPN extension support in h2o server - look for ALPN protocol: h2-14
 ===================================
 
     /usr/local/http2-15/bin/openssl s_client -alpn h2-14 -host h2ohttp2.centminmod.com -port 8081
-    CONNECTED(00000003)
-    
+        
     ---
     New, TLSv1/SSLv3, Cipher is ECDHE-RSA-CHACHA20-POLY1305
     Server public key is 2048 bit
