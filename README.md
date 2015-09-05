@@ -1,4 +1,4 @@
-Docker based image for [nghttp2 HTTP/2](https://nghttp2.org/) C library client, server, proxy and h2load testing tool for HTTP/2 on Ubuntu intended for use to test [h2o HTTP/2 server](https://github.com/h2o/h2o) integration on [CentminMod.com LEMP stack](http://centminmod.com). 
+Docker based image for [nghttp2 HTTP/2](https://nghttp2.org/) C library client, server, proxy and h2load testing tool for HTTP/2 on Ubuntu intended for use to test [h2o HTTP/2 server](https://github.com/h2o/h2o) and [Nginx HTTP/2](http://centminmod.com/http2-nginx.html) integration on [CentminMod.com LEMP stack](http://centminmod.com). 
 
 Used Ubuntu instead of CentOS as the nghttp2 build and compile software version requirements were too high a version for CentOS YUM packages and source compiling those higher software versions would take almost 2 hours to compile.
 
