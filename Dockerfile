@@ -29,7 +29,7 @@ RUN cd /opt; git clone https://github.com/ssllabs/ssllabs-scan.git
 RUN wget -c https://storage.googleapis.com/golang/go1.5.2.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.5.2.linux-amd64.tar.gz 
 ENV GOPATH /go
 ENV GOROOT /usr/local/go
-ENV PATH $GOROOT/bin
+ENV PATH $PATH:$GOROOT/bin
 RUN export GOROOT=/usr/local/go; export PATH=$PATH:$GOROOT/bin
 RUN echo "export GOROOT=/usr/local/go" >> /root/.bashrc; echo "export PATH=$PATH:$GOROOT/bin" >> /root/.bashrc; go env
 
