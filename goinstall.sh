@@ -10,6 +10,8 @@ source /root/.gvm/scripts/gvm
 # echo "dash dash/sh boolean false" | debconf-set-selections && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash
 debconf-show dash
 
+/root/.gvm/bin/gvm install go1.4.2
+/root/.gvm/bin/gvm use go1.4.2
 /root/.gvm/bin/gvm install go1.5.2
 /root/.gvm/bin/gvm use go1.5.2
 go version
