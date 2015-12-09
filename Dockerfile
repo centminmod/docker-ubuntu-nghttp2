@@ -34,10 +34,10 @@ RUN export GOROOT=/usr/local/go; export PATH=$PATH:$GOROOT/bin
 RUN echo "export GOROOT=/usr/local/go" >> /root/.bashrc; echo "export PATH=$PATH:$GOROOT/bin" >> /root/.bashrc; go env
 
 RUN export GOPATH=/go; export PATH=$PATH:$GOPATH/bin; mkdir -p $GOPATH/src/github.com/summerwind; mkdir -p $GOROOT/src/github.com/summerwind; 
-#RUN cd $GOPATH/src/github.com/summerwind; pwd; git clone https://github.com/summerwind/h2spec.git; cd h2spec; /usr/local/go/bin/go get github.com/bradfitz/http2; /usr/local/go/bin/go build cmd/h2spec.go; echo "$GOPATH/src/github.com/summerwind/h2spec/h2spec --help"; echo "$GOPATH/src/github.com/summerwind/h2spec/h2spec -h localhost -p 8081 -t"
+RUN echo "/go/bin/h2spec --help"; echo "/go/bin/h2spec -h localhost -p 8081 -t"
 
-RUN cd ~; go get github.com/summerwind/h2spec/cmd/h2spec
-RUN cd ~; go get github.com/bradfitz/http2/h2i
+RUN cd ~; go get github.com/summerwind/h2spec/cmd/h2spec; ln -s /go/bin/h2spec /usr/bin/h2spec
+RUN cd ~; go get github.com/bradfitz/http2/h2i; ln -s /go/bin/h2i /usr/bin/h2i
 
 RUN ls -lah /usr/local/bin/ | egrep 'nghttp|h2load' && echo "/usr/local/http2-15/bin/openssl version"
 
@@ -50,4 +50,5 @@ RUN echo && echo "check if your HTTP/2 enabled web host supports ALPN & NPN TLS 
 # /usr/local/bin/h2load --version
 # /usr/local/http2-15/bin/openssl version
 # /usr/local/http2-15/bin/curl --version
-# /go/src/github.com/summerwind/h2spec/h2spec -h
+# /go/bin/h2spec --help or /usr/bin/h2spec --help
+# /go/bin/h2i or /usr/bin/h2i --help
