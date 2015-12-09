@@ -26,17 +26,12 @@ RUN wget -cnv --no-check-certificate -O /usr/bin/testssl https://raw.githubuserc
 
 RUN cd /opt; git clone https://github.com/ssllabs/ssllabs-scan.git
 
-# ADD goinstall.sh /tmp/goinstall.sh
-# RUN chmod 0700 /tmp/goinstall.sh; /tmp/goinstall.sh
-
-ENV GOLANG_VERSION 1.5.2
-RUN curl -sSL https://golang.org/dl/go$GOLANG_VERSION.src.tar.gz | tar -v -C /usr/src -xz
-RUN cd /usr/src/go/src && ./make.bash --no-clean 2>&1
-ENV PATH /usr/src/go/bin:$PATH
-RUN mkdir -p /go/{bin,pkg,src} && chmod -R 777 /go
+RUN wget -c https://storage.googleapis.com/golang/go1.5.2.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.5.2.linux-amd64.tar.gz 
 ENV GOPATH /go
-ENV PATH /go/bin:$PATH
-RUN echo "export GOPATH=/go" >> /root/.bashrc; echo "export PATH=$PATH:$GOPATH/bin" >> /root/.bashrc; go env
+ENV GOROOT /usr/local/go
+ENV PATH $GOROOT/bin
+RUN export GOROOT=/usr/local/go; export PATH=$PATH:$GOROOT/bin
+RUN echo "export GOROOT=/usr/local/go" >> /root/.bashrc; echo "export PATH=$PATH:$GOROOT/bin" >> /root/.bashrc; go env
 
 RUN export GOPATH=/go; export PATH=$PATH:$GOPATH/bin; mkdir -p $GOPATH/src/github.com/summerwind; mkdir -p $GOROOT/src/github.com/summerwind; 
 RUN cd $GOPATH/src/github.com/summerwind; pwd; git clone https://github.com/summerwind/h2spec.git; cd h2spec; /usr/src/go/bin/go get github.com/bradfitz/http2; /usr/src/go/bin/go build cmd/h2spec.go; echo "$GOPATH/src/github.com/summerwind/h2spec/h2spec --help"; echo "$GOPATH/src/github.com/summerwind/h2spec/h2spec -h localhost -p 8081 -t"
