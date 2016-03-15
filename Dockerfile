@@ -1,4 +1,4 @@
-FROM ubuntu:vivid
+FROM ubuntu:xenial
 MAINTAINER George Liu <https://github.com/centminmod/docker-ubuntu-nghttp2>
 # Setup HTTP/2 nghttp2 on Ubuntu 15.x
 RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y perl python-setuptools dnsutils libssh2-1 libssh2-1-dev iputils-ping jq libc6-dev bison mercurial libboost-dev libboost-thread-dev nano tar bsdmainutils apt-file wget mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.4-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove  
