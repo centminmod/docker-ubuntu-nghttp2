@@ -2,17 +2,17 @@ Docker based image for [nghttp2 HTTP/2](https://nghttp2.org/) C library client, 
 
 Used Ubuntu instead of CentOS as the nghttp2 build and compile software version requirements were too high a version for CentOS YUM packages and source compiling those higher software versions would take almost 2 hours to compile.
 
-[Custom OpenSSL 1.0.2f version](https://github.com/PeterMosmans/openssl) with chacha20_poly1305 cipher patch etc is compiled for enabling ALPN TLS extension support. Default Ubuntu OpenSSL 1.0.1f only supports NPN TLS extension. The nghttp2 libraries support both ALPN & NPN extensions.
+[Custom OpenSSL 1.0.2i version](https://github.com/PeterMosmans/openssl) with chacha20_poly1305 cipher patch etc is compiled for enabling ALPN TLS extension support. Default Ubuntu OpenSSL 1.0.1f only supports NPN TLS extension. The nghttp2 libraries support both ALPN & NPN extensions.
 
     /usr/local/http2-15/bin/openssl version
-    OpenSSL 1.0.2-chacha (1.0.2f-dev)
+    OpenSSL 1.0.2-chacha (1.0.2i-dev)
 
-Custom curl 7.46 DEV version installed compiled against custom OpenSSL 1.0.2e
+Custom curl 7.49 DEV version installed compiled against custom OpenSSL 1.0.2i
 
     curl -V
-    curl 7.46.1-DEV (x86_64-unknown-linux-gnu) libcurl/7.46.1-DEV OpenSSL/1.0.2f zlib/1.2.8 libssh2/1.4.3 nghttp2/1.5.1-DEV
+    curl 7.49.0-DEV (x86_64-pc-linux-gnu) libcurl/7.49.0-DEV OpenSSL/1.0.2i zlib/1.2.8 libssh2/1.5.0 nghttp2/1.11.0-DEV
     Protocols: dict file ftp ftps gopher http https imap imaps pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp 
-    Features: AsynchDNS IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets 
+    Features: AsynchDNS IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets
 
 Also installed [Cipherscan SSL tool](https://github.com/jvehent/cipherscan), [testssl.sh tool](https://github.com/drwetter/testssl.sh), [h2spec](https://github.com/summerwind/h2spec) and [ssllabs-scan tool](https://github.com/ssllabs/ssllabs-scan/) and [h2i](https://github.com/bradfitz/http2/tree/master/h2i).
 
@@ -130,73 +130,47 @@ check for NPN extension support in h2o server - look for Next protocol: (1) h2-1
     Next protocol: (1) h2-14
     No ALPN negotiated
 
-Example using nghttp2 client against h2o HTTP/2 server on port 8081
+Example using nghttp2 client against Nginx 1.9.15 HTTP/2 server on port 443
 ===================================
 
-    nghttp -nv h2ohttp2.centminmod.com:8081
-
-    [  0.230] Connected
-    [  0.332][NPN] server offers:
-              * h2
-              * h2-16
-              * h2-14
+    nghttp -nv https://centminmod.com:443
+    [  0.082] Connected
     The negotiated protocol: h2
-    [  0.411] send SETTINGS frame <length=12, flags=0x00, stream_id=0>
+    [  0.104] recv SETTINGS frame <length=18, flags=0x00, stream_id=0>
+              (niv=3)
+              [SETTINGS_MAX_CONCURRENT_STREAMS(0x03):128]
+              [SETTINGS_INITIAL_WINDOW_SIZE(0x04):0]
+              [SETTINGS_MAX_FRAME_SIZE(0x05):16777215]
+    [  0.104] recv WINDOW_UPDATE frame <length=4, flags=0x00, stream_id=0>
+              (window_size_increment=2147418112)
+    [  0.104] send SETTINGS frame <length=12, flags=0x00, stream_id=0>
               (niv=2)
               [SETTINGS_MAX_CONCURRENT_STREAMS(0x03):100]
               [SETTINGS_INITIAL_WINDOW_SIZE(0x04):65535]
-    [  0.411] send PRIORITY frame <length=5, flags=0x00, stream_id=3>
+    [  0.104] send SETTINGS frame <length=0, flags=0x01, stream_id=0>
+              ; ACK
+              (niv=0)
+    [  0.104] send PRIORITY frame <length=5, flags=0x00, stream_id=3>
               (dep_stream_id=0, weight=201, exclusive=0)
-    [  0.411] send PRIORITY frame <length=5, flags=0x00, stream_id=5>
+    [  0.104] send PRIORITY frame <length=5, flags=0x00, stream_id=5>
               (dep_stream_id=0, weight=101, exclusive=0)
-    [  0.411] send PRIORITY frame <length=5, flags=0x00, stream_id=7>
+    [  0.104] send PRIORITY frame <length=5, flags=0x00, stream_id=7>
               (dep_stream_id=0, weight=1, exclusive=0)
-    [  0.411] send PRIORITY frame <length=5, flags=0x00, stream_id=9>
+    [  0.104] send PRIORITY frame <length=5, flags=0x00, stream_id=9>
               (dep_stream_id=7, weight=1, exclusive=0)
-    [  0.411] send PRIORITY frame <length=5, flags=0x00, stream_id=11>
+    [  0.104] send PRIORITY frame <length=5, flags=0x00, stream_id=11>
               (dep_stream_id=3, weight=1, exclusive=0)
-    [  0.411] send HEADERS frame <length=51, flags=0x25, stream_id=13>
+    [  0.104] send HEADERS frame <length=41, flags=0x25, stream_id=13>
               ; END_STREAM | END_HEADERS | PRIORITY
               (padlen=0, dep_stream_id=11, weight=16, exclusive=0)
               ; Open new stream
               :method: GET
               :path: /
               :scheme: https
-              :authority: h2ohttp2.centminmod.com:8081
+              :authority: centminmod.com
               accept: */*
               accept-encoding: gzip, deflate
-              user-agent: nghttp2/1.0.1-DEV
-    [  0.488] recv SETTINGS frame <length=18, flags=0x00, stream_id=0>
-              (niv=3)
-              [SETTINGS_ENABLE_PUSH(0x02):0]
-              [SETTINGS_MAX_CONCURRENT_STREAMS(0x03):100]
-              [SETTINGS_INITIAL_WINDOW_SIZE(0x04):262144]
-    [  0.488] recv SETTINGS frame <length=0, flags=0x01, stream_id=0>
-              ; ACK
-              (niv=0)
-    [  0.488] recv (stream_id=13) :status: 200
-    [  0.488] recv (stream_id=13) server: h2o/1.2.1-alpha1
-    [  0.488] recv (stream_id=13) date: Tue, 19 May 2015 14:50:28 GMT
-    [  0.488] recv (stream_id=13) content-type: text/html; charset=utf-8
-    [  0.488] recv (stream_id=13) last-modified: Mon, 04 May 2015 11:07:11 GMT
-    [  0.488] recv (stream_id=13) etag: "554752df-1d3"
-    [  0.488] recv (stream_id=13) vary: accept-encoding
-    [  0.488] recv (stream_id=13) content-encoding: gzip
-    [  0.488] recv (stream_id=13) powered-by: h2o on centminmod.com
-    [  0.488] recv (stream_id=13) cache-control: public, must-revalidate, proxy-revalidate
-    [  0.488] recv (stream_id=13) link: </style.css>; rel=preload; as=stylesheet
-    [  0.488] recv (stream_id=13) link: </reset.css>; rel=preload; as=stylesheet
-    [  0.488] recv HEADERS frame <length=237, flags=0x04, stream_id=13>
-              ; END_HEADERS
-              (padlen=0)
-              ; First response header
-    [  0.488] recv DATA frame <length=467, flags=0x01, stream_id=13>
-              ; END_STREAM
-    [  0.488] send SETTINGS frame <length=0, flags=0x01, stream_id=0>
-              ; ACK
-              (niv=0)
-    [  0.488] send GOAWAY frame <length=8, flags=0x00, stream_id=0>
-              (last_stream_id=0, error_code=NO_ERROR(0x00), opaque_data(0)=[])
+              user-agent: nghttp2/1.11.0-DEV
 
 Example against OpenLiteSpeed 1.4.8 server with HTTP/2 web site on port 8099
 ===================================
@@ -271,7 +245,7 @@ Example against OpenLiteSpeed 1.4.8 server with HTTP/2 web site on port 8099
     [  0.392] send GOAWAY frame <length=8, flags=0x00, stream_id=0>
               (last_stream_id=0, error_code=NO_ERROR(0x00), opaque_data(0)=[])
 
-OpenSSL 1.0.2f-chacha supported cipher list
+OpenSSL 1.0.2i-chacha supported cipher list
 ===================================
 
     /usr/local/http2-15/bin/openssl ciphers -l -V "ALL:COMPLEMENTOFALL"
@@ -436,6 +410,8 @@ OpenSSL 1.0.2f-chacha supported cipher list
       0x00,0x60 - EXP1024-RC4-MD5         SSLv3 Kx=RSA(1024) Au=RSA  Enc=RC4(56)   Mac=MD5  export
       0x00,0x14 - EXP-EDH-RSA-DES-CBC-SHA SSLv3 Kx=DH(512)  Au=RSA  Enc=DES(40)   Mac=SHA1 export
       0x00,0x11 - EXP-EDH-DSS-DES-CBC-SHA SSLv3 Kx=DH(512)  Au=DSS  Enc=DES(40)   Mac=SHA1 export
+      0x00,0x0E - EXP-DH-RSA-DES-CBC-SHA  SSLv3 Kx=DH/RSA   Au=DH   Enc=DES(40)   Mac=SHA1 export
+      0x00,0x0B - EXP-DH-DSS-DES-CBC-SHA  SSLv3 Kx=DH/DSS   Au=DH   Enc=DES(40)   Mac=SHA1 export
       0x00,0x19 - EXP-ADH-DES-CBC-SHA     SSLv3 Kx=DH(512)  Au=None Enc=DES(40)   Mac=SHA1 export
       0x00,0x08 - EXP-DES-CBC-SHA         SSLv3 Kx=RSA(512) Au=RSA  Enc=DES(40)   Mac=SHA1 export
       0x00,0x06 - EXP-RC2-CBC-MD5         SSLv3 Kx=RSA(512) Au=RSA  Enc=RC2(40)   Mac=MD5  export
