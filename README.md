@@ -10,9 +10,9 @@ Used Ubuntu instead of CentOS as the nghttp2 build and compile software version 
 Custom curl 7.49 DEV version installed compiled against custom OpenSSL 1.1.0-pre5
 
     curl -V
-    curl 7.49.0-DEV (x86_64-pc-linux-gnu) libcurl/7.49.0-DEV OpenSSL/1.1.0-pre5 zlib/1.2.8 libssh2/1.5.0 nghttp2/1.11.0-DEV
-    Protocols: dict file ftp ftps gopher http https imap imaps pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp 
-    Features: AsynchDNS IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets 
+    curl 7.49.0-DEV (x86_64-pc-linux-gnu) libcurl/7.49.0-DEV OpenSSL/1.1.0-pre5 zlib/1.2.8 libidn/1.32 libpsl/0.11.0 (+libicu/55.1) libssh2/1.5.0 nghttp2/1.11.0-DEV
+    Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp 
+    Features: AsynchDNS IDN IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets PSL 
 
 Also installed [Cipherscan SSL tool](https://github.com/jvehent/cipherscan), [testssl.sh tool](https://github.com/drwetter/testssl.sh), [h2spec](https://github.com/summerwind/h2spec) and [ssllabs-scan tool](https://github.com/ssllabs/ssllabs-scan/) and [h2i](https://github.com/bradfitz/http2/tree/master/h2i).
 
