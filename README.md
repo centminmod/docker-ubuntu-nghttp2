@@ -10,7 +10,7 @@ Used Ubuntu instead of CentOS as the nghttp2 build and compile software version 
 Custom curl 7.49 DEV version installed compiled against custom OpenSSL 1.1.0-pre5
 
     curl -V
-    curl 7.49.0-DEV (x86_64-pc-linux-gnu) libcurl/7.49.0-DEV OpenSSL/1.0.2g zlib/1.2.8 libssh2/1.5.0 nghttp2/1.11.0-DEV
+    curl 7.49.0-DEV (x86_64-pc-linux-gnu) libcurl/7.49.0-DEV OpenSSL/1.1.0-pre5 zlib/1.2.8 libssh2/1.5.0 nghttp2/1.11.0-DEV
     Protocols: dict file ftp ftps gopher http https imap imaps pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp 
     Features: AsynchDNS IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets 
 
