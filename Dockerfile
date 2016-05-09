@@ -30,7 +30,8 @@ RUN wget -cnv --no-check-certificate -O /usr/bin/testssl https://raw.githubuserc
 
 RUN cd /opt; git clone https://github.com/ssllabs/ssllabs-scan.git
 
-RUN wget -c https://storage.googleapis.com/golang/go1.5.2.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.5.2.linux-amd64.tar.gz 
+#RUN wget -c https://storage.googleapis.com/golang/go1.5.2.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.5.2.linux-amd64.tar.gz
+RUN wget -c https://storage.googleapis.com/golang/go1.6.2.linux-amd64.tar.gz && tar -C /usr/local -xzf go1.6.2.linux-amd64.tar.gz
 ENV GOPATH /go
 ENV GOROOT /usr/local/go
 ENV PATH $PATH:$GOROOT/bin
