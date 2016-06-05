@@ -7,10 +7,10 @@ Used Ubuntu instead of CentOS as the nghttp2 build and compile software version 
     /usr/local/http2-15/bin/openssl version
     OpenSSL 1.0.2i (beta) 19 Apr 2016
 
-Custom curl 7.49 DEV version installed compiled against custom OpenSSL 1.0.2i
+Custom curl 7.50 DEV version installed compiled against custom OpenSSL 1.0.2i
 
     curl -V
-    curl 7.49.0-DEV (x86_64-pc-linux-gnu) libcurl/7.49.0-DEV OpenSSL/1.0.2i zlib/1.2.8 libidn/1.32 libpsl/0.11.0 (+libicu/55.1) libssh2/1.5.0 nghttp2/1.11.0-DEV
+    curl 7.50.0-DEV (x86_64-pc-linux-gnu) libcurl/7.50.0-DEV OpenSSL/1.0.2i zlib/1.2.8 libidn/1.32 libpsl/0.11.0 (+libicu/55.1) libssh2/1.5.0 nghttp2/1.12.0-DEV
     Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp 
     Features: AsynchDNS IDN IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets PSL 
 
