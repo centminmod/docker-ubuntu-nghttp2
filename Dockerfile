@@ -18,7 +18,7 @@ RUN cd /usr/local/src; git clone --depth 1 https://github.com/tatsuhiro-t/spdyla
 RUN cd /usr/local/src/spdylay && autoreconf -i && automake && autoconf && ./configure OPENSSL_LIBS='-L/usr/local/http2-15/lib -lssl -lcrypto -levent -levent_openssl' && make -j3 && make install && make clean
 
 RUN cd /usr/local/src; git clone --depth 1 https://github.com/tatsuhiro-t/nghttp2.git
-RUN cd /usr/local/src/nghttp2 && autoreconf -i && automake && autoconf && PKG_CONFIG_PATH=/usr/local/http2-15/lib/pkgconfig ./configure --enable-app --enable-asio-lib --with-neverbleed && make -j3 && make install && ldconfig && make clean
+RUN cd /usr/local/src/nghttp2 && autoreconf -i && automake && autoconf && PKG_CONFIG_PATH=/usr/local/http2-15/lib/pkgconfig ./configure --enable-app --enable-asio-lib && make -j3 && make install && ldconfig && make clean
 
 # RUN cd /usr/local/src; mkdir -p /usr/local/src/libcurl_static; cd /usr/local/src/libcurl_static && wget -cnv http://curl.haxx.se/download/curl-7.46.0.tar.gz && tar xzf curl-7.46.0.tar.gz && cd /usr/local/src/libcurl_static/curl-7.46.0 && ./configure --prefix=/usr/local/http2-15 --with-ssl=/usr/local/http2-15 --with-libssh2 --disable-static --enable-threaded-resolver && make && make install && echo "/usr/local/http2-15/lib" > /etc/ld.so.conf.d/curl.conf && ldconfig && echo "alias curl='/usr/local/http2-15/bin/curl'" >> /root/.bashrc && . /root/.bashrc ; alias curl='/usr/local/http2-15/bin/curl'; /usr/local/http2-15/bin/curl --version;
 
