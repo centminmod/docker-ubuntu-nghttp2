@@ -1,7 +1,7 @@
 FROM ubuntu:xenial
 MAINTAINER George Liu <https://github.com/centminmod/docker-ubuntu-nghttp2>
 # Setup HTTP/2 nghttp2 on Ubuntu 15.x
-RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y libldb-dev libldap2-dev libpsl-dev libidn11 libidn11-dev perl python-setuptools dnsutils libssh2-1 libssh2-1-dev iputils-ping jq libc6-dev bison mercurial libboost-dev libboost-thread-dev nano tar bsdmainutils apt-file wget mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.5-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove  
+RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y nodejs npm libldb-dev libldap2-dev libpsl-dev libidn11 libidn11-dev perl python-setuptools dnsutils libssh2-1 libssh2-1-dev iputils-ping jq libc6-dev bison mercurial libboost-dev libboost-thread-dev nano tar bsdmainutils apt-file wget mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.5-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove  
 
 # RUN echo "dash dash/sh boolean false" | debconf-set-selections && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash;  debconf-show dash   
 
@@ -43,6 +43,7 @@ RUN echo "/go/bin/h2spec --help"; echo "/go/bin/h2spec -h localhost -p 8081 -t"
 
 RUN cd ~; go get github.com/summerwind/h2spec/cmd/h2spec; ln -s /go/bin/h2spec /usr/bin/h2spec
 RUN cd ~; go get github.com/bradfitz/http2/h2i; ln -s /go/bin/h2i /usr/bin/h2i
+RUN cd ~; npm install -g is-http2-cli; ln -s /usr/bin/nodejs /usr/bin/node
 
 RUN ls -lah /usr/local/bin/ | egrep 'nghttp|h2load' && echo "/usr/local/http2-15/bin/openssl version"
 
@@ -53,6 +54,7 @@ RUN echo && echo "check if your HTTP/2 enabled web host supports ALPN & NPN TLS 
 # /usr/local/bin/nghttpd --version
 # /usr/local/bin/nghttpx --version
 # /usr/local/bin/h2load --version
+# /usr/local/bin/is-http2
 # /usr/local/http2-15/bin/openssl version
 # /usr/local/http2-15/bin/curl --version
 # /go/bin/h2spec --help or /usr/bin/h2spec --help
