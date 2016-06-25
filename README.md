@@ -14,7 +14,7 @@ Custom curl 7.50 DEV version installed compiled against custom OpenSSL 1.0.2i
     Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp 
     Features: AsynchDNS IDN IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets PSL 
 
-Also installed [Cipherscan SSL tool](https://github.com/jvehent/cipherscan), [testssl.sh tool](https://github.com/drwetter/testssl.sh), [h2spec](https://github.com/summerwind/h2spec) and [ssllabs-scan tool](https://github.com/ssllabs/ssllabs-scan/), [is-http2-cli](https://github.com/stefanjudis/is-http2-cli) and [h2i](https://github.com/bradfitz/http2/tree/master/h2i).
+Also installed [Cipherscan SSL tool](https://github.com/jvehent/cipherscan), [testssl.sh tool](https://github.com/drwetter/testssl.sh), [h2spec](https://github.com/summerwind/h2spec) and [ssllabs-scan tool](https://github.com/ssllabs/ssllabs-scan/), [is-http2-cli](https://github.com/stefanjudis/is-http2-cli), [h2i](https://github.com/bradfitz/http2/tree/master/h2i) and [Mozilla TLS Observatory](https://github.com/mozilla/tls-observatory).
 
 ### My Docker Hub repo
 

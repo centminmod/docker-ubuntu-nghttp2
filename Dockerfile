@@ -43,6 +43,7 @@ RUN echo "/go/bin/h2spec --help"; echo "/go/bin/h2spec -h localhost -p 8081 -t"
 
 RUN cd ~; go get github.com/summerwind/h2spec/cmd/h2spec; ln -s /go/bin/h2spec /usr/bin/h2spec
 RUN cd ~; go get github.com/bradfitz/http2/h2i; ln -s /go/bin/h2i /usr/bin/h2i
+RUN cd ~; go get github.com/mozilla/tls-observatory/tlsobs; ln -s /go/bin/tlsobs /usr/bin/tlsobs
 RUN cd ~; npm install -g is-http2-cli; ln -s /usr/bin/nodejs /usr/bin/node
 
 RUN ls -lah /usr/local/bin/ | egrep 'nghttp|h2load' && echo "/usr/local/http2-15/bin/openssl version"
@@ -59,3 +60,4 @@ RUN echo && echo "check if your HTTP/2 enabled web host supports ALPN & NPN TLS 
 # /usr/local/http2-15/bin/curl --version
 # /go/bin/h2spec --help or /usr/bin/h2spec --help
 # /go/bin/h2i or /usr/bin/h2i --help
+# /go/bin/tlsobs or /usr/bin/tlsobs --help
