@@ -1,6 +1,6 @@
-FROM ubuntu:xenial
+FROM ubuntu:yakkety
 MAINTAINER George Liu <https://github.com/centminmod/docker-ubuntu-nghttp2>
-# Setup HTTP/2 nghttp2 on Ubuntu 15.x
+# Setup HTTP/2 nghttp2 on Ubuntu 16.x
 RUN ulimit -c -m -s -t unlimited && apt-get update && apt-get install -y nodejs npm libldb-dev libldap2-dev libpsl-dev libidn11 libidn11-dev perl python-setuptools dnsutils libssh2-1 libssh2-1-dev iputils-ping jq libc6-dev bison mercurial libboost-dev libboost-thread-dev nano tar bsdmainutils apt-file wget mlocate make binutils autoconf automake autotools-dev libtool pkg-config zlib1g-dev libcunit1-dev libssl-dev libxml2-dev libev-dev libevent-dev libjansson-dev libjemalloc-dev cython python3.5-dev openssl git gcc g++ libpcre3-dev libcap-dev libncurses5-dev curl && apt-get clean && apt-get autoclean && apt-get remove  
 
 # RUN echo "dash dash/sh boolean false" | debconf-set-selections && DEBIAN_FRONTEND=noninteractive dpkg-reconfigure dash;  debconf-show dash   
@@ -46,7 +46,7 @@ RUN cd ~; go get github.com/bradfitz/http2/h2i; ln -s /go/bin/h2i /usr/bin/h2i
 RUN cd ~; go get github.com/mozilla/tls-observatory/tlsobs; ln -s /go/bin/tlsobs /usr/bin/tlsobs
 RUN cd ~; npm install -g is-http2-cli; ln -s /usr/bin/nodejs /usr/bin/node
 
-RUN ls -lah /usr/local/bin/ | egrep 'nghttp|h2load' && echo "/usr/local/http2-15/bin/openssl version"
+RUN ls -lah /usr/local/bin/ | egrep 'nghttp|h2load' && echo "/usr/local/http2-15/bin/openssl version" && #apt-get remove --purge -y $(apt-mark showauto)
 
 RUN echo && echo "check if your HTTP/2 enabled web host supports ALPN & NPN TLS extensions" && echo "if testing a HTTP/2 server on non-standard port other than 443, ensure" && echo "target HTTP/2 server's firewall has allowed your docker image's host system" && echo "ip address to connect to that non-standard port e.g. 8081 for h2o server" && echo && echo "/usr/local/http2-15/bin/openssl s_client -alpn h2-14 -host yourhttp2_enabledhostname -port 8081" && echo "/usr/local/http2-15/bin/openssl s_client -nextprotoneg h2-14 -host yourhttp2_enabledhostname -port 8081"
 
