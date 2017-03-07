@@ -2,17 +2,17 @@ Docker based image for [nghttp2 HTTP/2](https://nghttp2.org/) C library client, 
 
 Used Ubuntu instead of CentOS as the nghttp2 build and compile software version requirements were too high a version for CentOS YUM packages and source compiling those higher software versions would take almost 2 hours to compile.
 
-[Custom OpenSSL 1.0.2i version](https://github.com/PeterMosmans/openssl) with chacha20_poly1305 cipher patch etc is compiled for enabling ALPN TLS extension support. Default Ubuntu OpenSSL 1.0.1g only supports NPN TLS extension. The nghttp2 libraries support both ALPN & NPN extensions.
+[Custom OpenSSL 1.0.2k version](https://github.com/PeterMosmans/openssl) with chacha20_poly1305 cipher patch etc is compiled for enabling ALPN TLS extension support. Default Ubuntu OpenSSL 1.0.1g only supports NPN TLS extension. The nghttp2 libraries support both ALPN & NPN extensions.
 
     /usr/local/http2-15/bin/openssl version
-    OpenSSL 1.0.2i (beta) 19 Apr 2016
+    OpenSSL 1.0.2-chacha (1.0.2k-dev)
 
 Custom curl 7.50 DEV version installed compiled against custom OpenSSL 1.0.2i
 
     curl -V
-    curl 7.50.0-DEV (x86_64-pc-linux-gnu) libcurl/7.50.0-DEV OpenSSL/1.0.2i zlib/1.2.8 libidn/1.32 libpsl/0.11.0 (+libicu/55.1) libssh2/1.5.0 nghttp2/1.12.0-DEV
+    curl 7.53.2-DEV (x86_64-pc-linux-gnu) libcurl/7.53.2-DEV OpenSSL/1.0.2k zlib/1.2.8 libpsl/0.14.0 (+libicu/57.1) libssh2/1.7.0 nghttp2/1.21.0-DEV
     Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp 
-    Features: AsynchDNS IDN IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets PSL 
+    Features: AsynchDNS IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets HTTPS-proxy PSL 
 
 Also installed [Cipherscan SSL tool](https://github.com/jvehent/cipherscan), [testssl.sh tool](https://github.com/drwetter/testssl.sh), [h2spec](https://github.com/summerwind/h2spec) and [ssllabs-scan tool](https://github.com/ssllabs/ssllabs-scan/), [is-http2-cli](https://github.com/stefanjudis/is-http2-cli), [h2i](https://github.com/bradfitz/http2/tree/master/h2i) and [Mozilla TLS Observatory](https://github.com/mozilla/tls-observatory).
 
