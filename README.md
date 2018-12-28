@@ -71,11 +71,11 @@ also I setup an alias shortcut which makes it easy to remove the current image a
 
 #### ssllabs-scan tool usage
 
-    go run /opt/ssllabs-scan/ssllabs-scan.go https://www.google.com
+    go run /opt/ssllabs-scan/ssllabs-scan-v3.go https://www.google.com
 
 or
 
-    go run /opt/ssllabs-scan/ssllabs-scan.go -json-flat https://www.google.com
+    go run /opt/ssllabs-scan/ssllabs-scan-v3.go -json-flat https://www.google.com
 
 #### h2i usage
 
