@@ -18,11 +18,11 @@ bytesToHuman() {
 compare() {
   echo "URI: ${2} (${1})"
 
-  SIZE=$(curl -kso /dev/null "${2}" -w '%{size_download}')
+  SIZE=$(/usr/local/http2-15/bin/curl -kso /dev/null "${2}" -w '%{size_download}')
   SIZE_HUMAN=$(bytesToHuman "$SIZE")
   echo "Uncompressed size : $SIZE_HUMAN"
 
-  SIZE=$(curl -H "Accept-Encoding: ${1}" -kso /dev/null "${2}" -w '%{size_download}')
+  SIZE=$(/usr/local/http2-15/bin/curl -H "Accept-Encoding: ${1}" -kso /dev/null "${2}" -w '%{size_download}')
 
   SIZE_HUMAN=$(bytesToHuman "$SIZE")
   echo "Compressed size   : $SIZE_HUMAN"
