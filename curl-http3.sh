@@ -34,8 +34,8 @@ install() {
   ./configure LDFLAGS="-Wl,-rpath,$PWD/../quiche/target/release" --with-ssl=$PWD/../quiche/deps/boringssl/.openssl --with-quiche=$PWD/../quiche/target/release
   make -j$(nproc)
   /usr/local/src/curl/src/curl -V
-  alias curl-http3='export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu';/usr/local/src/curl/src/curl'
-  echo "alias curl-http3='export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu';/usr/local/src/curl/src/curl'" >> /root/.bashrc;
+  alias curl-http3="export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu';/usr/local/src/curl/src/curl"
+  echo "alias curl-http3=\"export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu';/usr/local/src/curl/src/curl\"" >> /root/.bashrc;
   echo
   curl-http3 -V
   echo
