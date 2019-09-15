@@ -11,6 +11,8 @@ install() {
   cd /usr/local/src
   rm -rf quiche
   git clone --recursive https://github.com/cloudflare/quiche
+  cd /usr/local/src/quiche
+  git checkout 89d0317
   cd /usr/local/src/quiche/deps/boringssl
   rm -rf build
   mkdir -p build
