@@ -16,7 +16,8 @@ RUN export GOROOT=/usr/local/go; export PATH=$PATH:$GOROOT/bin; echo "export GOR
 RUN cd ~; wget --no-check-certificate https://github.com/summerwind/h2spec/releases/download/v2.2.1/h2spec_linux_amd64.tar.gz; tar xvzf h2spec_linux_amd64.tar.gz; rm -rf h2spec_linux_amd64.tar.gz; cp -a h2spec /usr/bin/h2spec; cd ~; go get github.com/bradfitz/http2/h2i; ln -s /go/bin/h2i /usr/bin/h2i; cd ~; go get github.com/mozilla/tls-observatory/tlsobs; ln -s /go/bin/tlsobs /usr/bin/tlsobs; cd ~; #npm install -g is-http2-cli; ln -s /usr/bin/nodejs /usr/bin/node; ls -lah /usr/local/bin/ | egrep 'nghttp|h2load' && echo "/usr/local/http2-15/bin/openssl version"; echo && echo "check if your HTTP/2 enabled web host supports ALPN & NPN TLS extensions" && echo "if testing a HTTP/2 server on non-standard port other than 443, ensure" && echo "target HTTP/2 server's firewall has allowed your docker image's host system" && echo "ip address to connect to that non-standard port e.g. 8081 for h2o server" && echo && echo "/usr/local/http2-15/bin/openssl s_client -alpn h2-14 -host yourhttp2_enabledhostname -port 8081" && echo "/usr/local/http2-15/bin/openssl s_client -nextprotoneg h2-14 -host yourhttp2_enabledhostname -port 8081"
 
 COPY curl-http3.sh /tmp/curl-http3.sh
-RUN chmod +x /tmp/curl-http3.sh; /tmp/curl-http3.sh;
+COPY lsquic.sh /tmp/lsquic.sh
+RUN chmod +x /tmp/curl-http3.sh; /tmp/curl-http3.sh; chmod +x /tmp/lsquic.sh; /tmp/lsquic.sh
 
 # /usr/bin/cipherscan
 # /usr/local/bin/nghttp --version
