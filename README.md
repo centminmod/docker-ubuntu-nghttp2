@@ -96,10 +96,10 @@ Custom OpenSSL 1.1.1 master branch. The nghttp2 libraries support both ALPN & NP
 Custom curl 7.59 DEV version installed compiled against custom OpenSSL 1.1.1 dev build with TLS v1.3 draft-18 branch support
 
     curl -V
-    curl 7.59.0-DEV (x86_64-pc-linux-gnu) libcurl/7.59.0-DEV OpenSSL/1.1.1 zlib/1.2.11 libpsl/0.18.0 (+libidn2/2.0.2) libssh2/1.8.0 nghttp2/1.31.0-DEV
+    curl 7.66.1-DEV (x86_64-pc-linux-gnu) libcurl/7.66.1-DEV OpenSSL/1.1.1e zlib/1.2.11 libidn2/2.0.5 libpsl/0.20.2 (+libidn2/2.0.5) libssh2/1.8.0 nghttp2/1.40.0-DEV
     Release-Date: [unreleased]
     Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp 
-    Features: AsynchDNS IPv6 Largefile NTLM NTLM_WB SSL libz TLS-SRP HTTP2 UnixSockets HTTPS-proxy PSL 
+    Features: AsynchDNS HTTP2 HTTPS-proxy IDN IPv6 Largefile libz NTLM NTLM_WB PSL SSL TLS-SRP UnixSockets
 
 Also installed [Cipherscan SSL tool](https://github.com/jvehent/cipherscan), [testssl.sh tool](https://github.com/drwetter/testssl.sh), [h2spec](https://github.com/summerwind/h2spec) and [ssllabs-scan tool](https://github.com/ssllabs/ssllabs-scan/), [is-http2-cli](https://github.com/stefanjudis/is-http2-cli), [h2i](https://github.com/bradfitz/http2/tree/master/h2i) and [Mozilla TLS Observatory](https://github.com/mozilla/tls-observatory).
 
