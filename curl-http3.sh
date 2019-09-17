@@ -6,7 +6,7 @@ install() {
   export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu'
   export GOROOT=/usr/local/go
   export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/go/bin
-  apt-get -y install build-essential autoconf libtool pkg-config libev-dev cmake libunwind-dev cargo && apt-get clean && apt-get autoclean && apt-get remove
+  apt-get -y install build-essential autoconf libtool pkg-config libev-dev cmake libunwind-dev cargo brotli libbrotli-dev && apt-get clean && apt-get autoclean && apt-get remove
   # apt-get -y install build-essential autoconf libtool pkg-config libev-dev cmake libunwind-dev golang cargo && apt-get clean && apt-get autoclean && apt-get remove
   cd /usr/local/src
   rm -rf quiche
@@ -23,15 +23,22 @@ install() {
   rm -rf .openssl/lib
   mkdir .openssl/lib -p
   \cp -f build/crypto/libcrypto.a build/ssl/libssl.a .openssl/lib
+  echo "\$PWD"
+  echo $PWD
   ln -s $PWD/include .openssl
   # Build quiche:
   cd ../..
+  echo "QUICHE_BSSL_PATH=$PWD/deps/boringssl cargo build --release --examples --features pkg-config-meta"
   QUICHE_BSSL_PATH=$PWD/deps/boringssl cargo build --release --examples --features pkg-config-meta
   mkdir -p /usr/local/quiche/bin/
   \cp -af /usr/local/src/quiche/target/release/examples/http3-client /usr/local/quiche/bin/
   \cp -af /usr/local/src/quiche/target/release/examples/http3-server /usr/local/quiche/bin/
   \cp -af /usr/local/src/quiche/target/release/examples/client /usr/local/quiche/bin/
   \cp -af /usr/local/src/quiche/target/release/examples/server /usr/local/quiche/bin/
+  \cp -af /usr/local/src/quiche/target/release/quiche.pc /usr/lib/x86_64-linux-gnu/pkgconfig/quiche.pc
+  \cp -af /usr/local/src/quiche/include/*.h /usr/include/x86_64-linux-gnu
+  \cp -af /usr/local/src/quiche/target/release/deps/libquiche.so /usr/lib/x86_64-linux-gnu
+  \cp -af /usr/local/src/quiche/target/release/deps/libquiche.a /usr/lib/x86_64-linux-gnu
   export PATH="/usr/local/quiche/bin/:${PATH}"
   if [ ! "$(grep '/usr/local/quiche/bin' /root/.bashrc)" ]; then
     echo 'export PATH="/usr/local/quiche/bin/:${PATH}"' >> /root/.bashrc;
@@ -43,20 +50,33 @@ install() {
   echo "/usr/local/quiche/bin/http3-client -h"
   /usr/local/quiche/bin/http3-client -h
   echo
-  echo "/usr/local/quiche/bin/http-server -h"
-  /usr/local/quiche/bin/http-server -h
-  echo
-  echo "/usr/local/quiche/bin/http-client -h"
-  /usr/local/quiche/bin/http-client -h
+  # echo "/usr/local/quiche/bin/http-server -h"
+  # /usr/local/quiche/bin/http-server -h
+  # echo
+  # echo "/usr/local/quiche/bin/http-client -h"
+  # /usr/local/quiche/bin/http-client -h
 
   echo
   cd /usr/local/src
   rm -rf curl
   git clone https://github.com/curl/curl
   cd curl
+  # git checkout 00da8341
   make clean
   ./buildconf
-  ./configure LDFLAGS="-Wl,-rpath,$PWD/../quiche/target/release" --with-ssl=$PWD/../quiche/deps/boringssl/.openssl --with-quiche=$PWD/../quiche/target/release
+  echo
+  echo "\$PWD"
+  echo $PWD
+  echo
+  echo "ls -lah /quiche/target/release/deps"
+  ls -lah /quiche/target/release/deps
+  echo
+  echo "ls -lah /quiche/target/release"
+  ls -lah /quiche/target/release
+  echo
+  # export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu:/usr/local/src/quiche/target/release'
+  echo "./configure LDFLAGS=\"-Wl,-rpath,$PWD/../quiche/target/release\" --with-ssl=$PWD/../quiche/deps/boringssl/.openssl --with-quiche=$PWD/../quiche/target/release --with-brotli --with-libssh2"
+  ./configure LDFLAGS="-Wl,-rpath,$PWD/../quiche/target/release" --with-quiche=$PWD/../quiche/target/release --with-ssl=$PWD/../quiche/deps/boringssl/.openssl --with-brotli --with-libssh2
   make -j$(nproc)
   /usr/local/src/curl/src/curl -V
   alias curl-http3="export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu';/usr/local/src/curl/src/curl"
@@ -64,8 +84,8 @@ install() {
     echo "alias curl-http3=\"export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu';/usr/local/src/curl/src/curl\"" >> /root/.bashrc;
   fi
   echo
-  curl-http3 -V
-  echo
+  # curl-http3 -V
+  # echo
 }
 
 install

@@ -9,15 +9,15 @@ Used Ubuntu instead of CentOS as the nghttp2 build and compile software version 
 Added custom curl-http3 binary to test curl with HTTP/3 QUIC support via BoringSSL & [Cloudflare Quiche library](https://github.com/cloudflare/quiche)
 
 ```
-curl-http3 -V
-curl 7.66.1-DEV (x86_64-pc-linux-gnu) libcurl/7.66.1-DEV BoringSSL zlib/1.2.11 libidn2/2.0.5 libpsl/0.20.2 (+libidn2/2.0.5) nghttp2/1.36.0
+curl-http3 -V 
+curl 7.66.1-DEV (x86_64-pc-linux-gnu) libcurl/7.66.1-DEV BoringSSL zlib/1.2.11 brotli/1.0.7 libidn2/2.0.5 libpsl/0.20.2 (+libidn2/2.0.5) libssh2/1.8.0 nghttp2/1.36.0 quiche/0.1.0-alpha4
 Release-Date: [unreleased]
-Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s rtsp smb smbs smtp smtps telnet tftp 
-Features: AsynchDNS HTTP2 HTTPS-proxy IDN IPv6 Largefile libz NTLM NTLM_WB PSL SSL UnixSockets
+Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp 
+Features: AsynchDNS brotli HTTP2 HTTP3 HTTPS-proxy IDN IPv6 Largefile libz NTLM NTLM_WB PSL SSL UnixSockets
 ```
 
 ```
-curl-http3 --http3 -I https://geekflare.com
+curl-http3 --http3 -4I https://geekflare.com
 HTTP/3 200
 date: Mon, 16 Sep 2019 22:28:42 GMT
 content-type: text/html; charset=UTF-8
@@ -35,6 +35,55 @@ alt-svc: h3-22=":443"; ma=86400
 expect-ct: max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
 server: cloudflare
 cf-ray: 51764666eaaf9590-IAD
+```
+
+```
+curl-http3 --http3 -4Iv https://www.facebook.com
+*   Trying 31.13.66.35:443...
+* Sent QUIC client Initial, ALPN: h3-22
+* h3 [:method: HEAD]
+* h3 [:path: /]
+* h3 [:scheme: https]
+* h3 [:authority: www.facebook.com]
+* h3 [User-Agent: curl/7.66.1-DEV]
+* h3 [Accept: */*]
+* Using HTTP/3 Stream ID: 0 (easy handle 0x55fdd0a9ee00)
+> HEAD / HTTP/3
+> Host: www.facebook.com
+> User-Agent: curl/7.66.1-DEV
+> Accept: */*
+> 
+< HTTP/3 200
+HTTP/3 200
+* Added cookie fr="1heNdzqvmDeQ0PjJm..BdgSpZ.4-.AAA.0.0.BdgSpZ.AWWbiMUY" for domain facebook.com, path /, expire 1600282072
+< set-cookie: fr=1heNdzqvmDeQ0PjJm..BdgSpZ.4-.AAA.0.0.BdgSpZ.AWWbiMUY; expires=Wed, 16-Sep-2020 18:47:52 GMT; Max-Age=31535999; path=/; domain=.facebook.com; secure; httponly
+set-cookie: fr=1heNdzqvmDeQ0PjJm..BdgSpZ.4-.AAA.0.0.BdgSpZ.AWWbiMUY; expires=Wed, 16-Sep-2020 18:47:52 GMT; Max-Age=31535999; path=/; domain=.facebook.com; secure; httponly
+* Added cookie sb="WSqBXa2SKSUPKyEMMkoN0Ujh" for domain facebook.com, path /, expire 1631818073
+< set-cookie: sb=WSqBXa2SKSUPKyEMMkoN0Ujh; expires=Thu, 16-Sep-2021 18:47:53 GMT; Max-Age=63072000; path=/; domain=.facebook.com; secure; httponly
+set-cookie: sb=WSqBXa2SKSUPKyEMMkoN0Ujh; expires=Thu, 16-Sep-2021 18:47:53 GMT; Max-Age=63072000; path=/; domain=.facebook.com; secure; httponly
+< cache-control: private, no-cache, no-store, must-revalidate
+cache-control: private, no-cache, no-store, must-revalidate
+< pragma: no-cache
+pragma: no-cache
+< strict-transport-security: max-age=15552000; preload
+strict-transport-security: max-age=15552000; preload
+< vary: Accept-Encoding
+vary: Accept-Encoding
+< x-content-type-options: nosniff
+x-content-type-options: nosniff
+< x-frame-options: DENY
+x-frame-options: DENY
+< x-xss-protection: 0
+x-xss-protection: 0
+< expires: Sat, 01 Jan 2000 00:00:00 GMT
+expires: Sat, 01 Jan 2000 00:00:00 GMT
+< content-type: text/html; charset="utf-8"
+content-type: text/html; charset="utf-8"
+< x-fb-debug: ArbZm142+gtLDSqiQBE1kWKfzqmuodfTnXQwxg/gzU9EP9onEN3LppyMrCKCvcMNJYyu7Wt2bKb/Y6o2R2XNAQ==
+x-fb-debug: ArbZm142+gtLDSqiQBE1kWKfzqmuodfTnXQwxg/gzU9EP9onEN3LppyMrCKCvcMNJYyu7Wt2bKb/Y6o2R2XNAQ==
+< date: Tue, 17 Sep 2019 18:47:53 GMT
+date: Tue, 17 Sep 2019 18:47:53 GMT
+* Connection #0 to host www.facebook.com left intact
 ```
 
 Build [Cloudflare Quiche library](https://github.com/cloudflare/quiche) `http3-server` and `http3-client`
@@ -91,7 +140,7 @@ Custom OpenSSL 1.1.1 master branch. The nghttp2 libraries support both ALPN & NP
     ENGINESDIR: "/usr/local/http2-15/lib/engines-1.1"
     Seeding source: os-specific
 
-Custom curl 7.59 DEV version installed compiled against custom OpenSSL 1.1.1 dev build with TLS v1.3 draft-18 branch support
+Custom curl latest DEV version installed compiled against custom OpenSSL 1.1.1 dev build with TLS v1.3 rfc final version support
 
     curl -V
     curl 7.66.1-DEV (x86_64-pc-linux-gnu) libcurl/7.66.1-DEV OpenSSL/1.1.1e zlib/1.2.11 libidn2/2.0.5 libpsl/0.20.2 (+libidn2/2.0.5) libssh2/1.8.0 nghttp2/1.40.0-DEV
