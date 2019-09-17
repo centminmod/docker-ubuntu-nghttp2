@@ -2,14 +2,96 @@
 
 [![](https://images.microbadger.com/badges/version/centminmod/docker-ubuntu-nghttp2.svg)](https://microbadger.com/images/centminmod/docker-ubuntu-nghttp2 "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/image/centminmod/docker-ubuntu-nghttp2.svg)](https://microbadger.com/images/centminmod/docker-ubuntu-nghttp2 "Get your own image badge on microbadger.com")  [![](https://images.microbadger.com/badges/commit/centminmod/docker-ubuntu-nghttp2.svg)](https://microbadger.com/images/centminmod/docker-ubuntu-nghttp2 "Get your own commit badge on microbadger.com")
 
-Docker based image for [nghttp2 HTTP/2](https://nghttp2.org/) C library client, server, proxy and h2load testing tool for HTTP/2 on Ubuntu intended for use to test [h2o HTTP/2 server](https://github.com/h2o/h2o) and [Nginx HTTP/2](http://centminmod.com/http2-nginx.html) integration & [Letsencrypt client](http://centminmod.com/letsencrypt-freessl.html) integration in [CentminMod.com LEMP stack](http://centminmod.com). 
+Docker based image for [nghttp2 HTTP/2](https://nghttp2.org/) C library client, server, proxy and h2load testing tool for HTTP/2 and curl-http3 HTTP/3 QUIC builds on Ubuntu intended for use to test [h2o HTTP/2 server](https://github.com/h2o/h2o) and [Nginx HTTP/2](http://centminmod.com/http2-nginx.html) integration & [Letsencrypt client](http://centminmod.com/letsencrypt-freessl.html) integration in [CentminMod.com LEMP stack](http://centminmod.com). 
 
 Used Ubuntu instead of CentOS as the nghttp2 build and compile software version requirements were too high a version for CentOS YUM packages and source compiling those higher software versions would take almost 2 hours to compile.
 
-Custom OpenSSL 1.1.1 pre-release alpha. The nghttp2 libraries support both ALPN & NPN extensions.
+Added custom curl-http3 binary to test curl with HTTP/3 QUIC support via BoringSSL & [Cloudflare Quiche library](https://github.com/cloudflare/quiche)
+
+```
+curl-http3 -V
+shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+chdir: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
+curl 7.66.1-DEV (x86_64-pc-linux-gnu) libcurl/7.66.1-DEV BoringSSL zlib/1.2.11 libidn2/2.0.5 libpsl/0.20.2 (+libidn2/2.0.5) nghttp2/1.36.0
+Release-Date: [unreleased]
+Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s rtsp smb smbs smtp smtps telnet tftp 
+Features: AsynchDNS HTTP2 HTTPS-proxy IDN IPv6 Largefile libz NTLM NTLM_WB PSL SSL UnixSockets
+```
+
+```
+curl-http3 --http3 -I https://geekflare.com
+HTTP/3 200
+date: Mon, 16 Sep 2019 22:28:42 GMT
+content-type: text/html; charset=UTF-8
+set-cookie: __cfduid=d447af6f152b164853a569df9c38089531568672922; expires=Tue, 15-Sep-20 22:28:42 GMT; path=/; domain=.geekflare.com; HttpOnly; Secure
+vary: Accept-Encoding
+link: <https://geekflare.com/wp-json/>; rel="https://api.w.org/"
+link: <https://geekflare.com/>; rel=shortlink
+x-srcache-fetch-status: MISS
+x-srcache-store-status: BYPASS
+x-powered-by: EasyEngine v4.0.12
+via: 1.1 google
+strict-transport-security: max-age=15552000; preload
+x-content-type-options: nosniff
+alt-svc: h3-22=":443"; ma=86400
+expect-ct: max-age=604800, report-uri="https://report-uri.cloudflare.com/cdn-cgi/beacon/expect-ct"
+server: cloudflare
+cf-ray: 51764666eaaf9590-IAD
+```
+
+Build [Cloudflare Quiche library](https://github.com/cloudflare/quiche) `http3-server` and `http3-client`
+
+```
+http3-server -h
+Usage:
+  http3-server [options]
+  http3-server -h | --help
+
+Options:
+  --listen <addr>          Listen on the given IP:port [default: 127.0.0.1:4433]
+  --cert <file>            TLS certificate path [default: examples/cert.crt]
+  --key <file>             TLS certificate key path [default: examples/cert.key]
+  --root <dir>             Root directory [default: examples/root/]
+  --name <str>             Name of the server [default: quic.tech]
+  --max-data BYTES         Connection-wide flow control limit [default: 10000000].
+  --max-stream-data BYTES  Per-stream flow control limit [default: 1000000].
+  --no-retry               Disable stateless retry.
+  --no-grease              Don't send GREASE.
+  -h --help                Show this screen.
+```
+```
+http3-client -h
+Usage:
+  http3-client [options] URL
+  http3-client -h | --help
+
+Options:
+  --method METHOD          Use the given HTTP request method [default: GET].
+  --body FILE              Send the given file as request body.
+  --max-data BYTES         Connection-wide flow control limit [default: 10000000].
+  --max-stream-data BYTES  Per-stream flow control limit [default: 1000000].
+  --wire-version VERSION   The version number to send to the server [default: babababa].
+  --no-verify              Don't verify server's certificate.
+  --no-grease              Don't send GREASE.
+  -H --header HEADER ...   Add a request header.
+  -n --requests REQUESTS   Send the given number of identical requests [default: 1].
+  -h --help                Show this screen.
+```
+```
+http3-client https://geekflare.com
+```
+
+Custom OpenSSL 1.1.1 master branch. The nghttp2 libraries support both ALPN & NPN extensions.
 
     /usr/local/http2-15/bin/openssl version
-    OpenSSL 1.1.1-pre2-dev  xx XXX xxxx
+    OpenSSL 1.1.1e-dev  xx XXX xxxx
+    built on: Mon Sep 16 23:29:35 2019 UTC
+    platform: linux-x86_64
+    options:  bn(64,64) rc4(16x,int) des(int) idea(int) blowfish(ptr) 
+    compiler: gcc -fPIC -pthread -m64 -Wa,--noexecstack -Wall -O3 -DOPENSSL_USE_NODELETE -DL_ENDIAN -DOPENSSL_PIC -DOPENSSL_CPUID_OBJ -DOPENSSL_IA32_SSE2 -DOPENSSL_BN_ASM_MONT -DOPENSSL_BN_ASM_MONT5 -DOPENSSL_BN_ASM_GF2m -DSHA1_ASM -DSHA256_ASM -DSHA512_ASM -DKECCAK1600_ASM -DRC4_ASM -DMD5_ASM -DVPAES_ASM -DGHASH_ASM -DECP_   NISTZ256_ASM -DX25519_ASM -DPOLY1305_ASM -DNDEBUG
+    OPENSSLDIR: "/usr/local/http2-15/ssl"
+    ENGINESDIR: "/usr/local/http2-15/lib/engines-1.1"
+    Seeding source: os-specific
 
 Custom curl 7.59 DEV version installed compiled against custom OpenSSL 1.1.1 dev build with TLS v1.3 draft-18 branch support
 

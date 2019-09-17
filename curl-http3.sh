@@ -26,7 +26,30 @@ install() {
   ln -s $PWD/include .openssl
   # Build quiche:
   cd ../..
-  QUICHE_BSSL_PATH=$PWD/deps/boringssl cargo build --release --features pkg-config-meta
+  QUICHE_BSSL_PATH=$PWD/deps/boringssl cargo build --release --examples --features pkg-config-meta
+  mkdir -p /usr/local/quiche/bin/
+  \cp -af /usr/local/src/quiche/target/release/examples/http3-client /usr/local/quiche/bin/
+  \cp -af /usr/local/src/quiche/target/release/examples/http3-server /usr/local/quiche/bin/
+  \cp -af /usr/local/src/quiche/target/release/examples/client /usr/local/quiche/bin/
+  \cp -af /usr/local/src/quiche/target/release/examples/server /usr/local/quiche/bin/
+  export PATH="/usr/local/quiche/bin/:${PATH}"
+  if [ ! "$(grep '/usr/local/quiche/bin' /root/.bashrc)" ]; then
+    echo 'export PATH="/usr/local/quiche/bin/:${PATH}"' >> /root/.bashrc;
+  fi
+  echo
+  echo "/usr/local/quiche/bin/http3-server -h"
+  /usr/local/quiche/bin/http3-server -h
+  echo
+  echo "/usr/local/quiche/bin/http3-client -h"
+  /usr/local/quiche/bin/http3-client -h
+  echo
+  echo "/usr/local/quiche/bin/http-server -h"
+  /usr/local/quiche/bin/http-server -h
+  echo
+  echo "/usr/local/quiche/bin/http-client -h"
+  /usr/local/quiche/bin/http-client -h
+
+  echo
   cd /usr/local/src
   rm -rf curl
   git clone https://github.com/curl/curl
@@ -37,7 +60,9 @@ install() {
   make -j$(nproc)
   /usr/local/src/curl/src/curl -V
   alias curl-http3="export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu';/usr/local/src/curl/src/curl"
-  echo "alias curl-http3=\"export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu';/usr/local/src/curl/src/curl\"" >> /root/.bashrc;
+  if [ ! "$(grep 'alias curl-http3' /root/.bashrc)" ]; then
+    echo "alias curl-http3=\"export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu';/usr/local/src/curl/src/curl\"" >> /root/.bashrc;
+  fi
   echo
   curl-http3 -V
   echo
