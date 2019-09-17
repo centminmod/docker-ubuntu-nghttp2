@@ -10,8 +10,6 @@ Added custom curl-http3 binary to test curl with HTTP/3 QUIC support via BoringS
 
 ```
 curl-http3 -V
-shell-init: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
-chdir: error retrieving current directory: getcwd: cannot access parent directories: No such file or directory
 curl 7.66.1-DEV (x86_64-pc-linux-gnu) libcurl/7.66.1-DEV BoringSSL zlib/1.2.11 libidn2/2.0.5 libpsl/0.20.2 (+libidn2/2.0.5) nghttp2/1.36.0
 Release-Date: [unreleased]
 Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s rtsp smb smbs smtp smtps telnet tftp 
