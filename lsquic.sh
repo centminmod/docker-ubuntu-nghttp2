@@ -45,6 +45,9 @@ install() {
   \cp -f http_client /usr/bin
   \cp -f http_server /usr/bin
   ls -lah /usr/bin/http_client /usr/bin/http_server
+  echo
+  echo "http_client -s www.google.com -M HEAD -p / -o version=Q046"
+  # http_client -s www.google.com -M HEAD -p / -o version=Q046
 }
 
 install

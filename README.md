@@ -142,11 +142,31 @@ Custom OpenSSL 1.1.1 master branch. The nghttp2 libraries support both ALPN & NP
 
 Custom curl latest DEV version installed compiled against custom OpenSSL 1.1.1 dev build with TLS v1.3 rfc final version support
 
-    curl -V
-    curl 7.66.1-DEV (x86_64-pc-linux-gnu) libcurl/7.66.1-DEV OpenSSL/1.1.1e zlib/1.2.11 libidn2/2.0.5 libpsl/0.20.2 (+libidn2/2.0.5) libssh2/1.8.0 nghttp2/1.40.0-DEV
+    curl-http3 -V
+    curl 7.67.0-DEV (x86_64-pc-linux-gnu) libcurl/7.67.0-DEV BoringSSL zlib/1.2.11 brotli/1.0.7 libidn2/2.0.5 libpsl/0.20.2 (+libidn2/2.0.5) libssh2/1.8.0    nghttp2/1.36.0 quiche/0.1.0-alpha4
     Release-Date: [unreleased]
     Protocols: dict file ftp ftps gopher http https imap imaps ldap ldaps pop3 pop3s rtsp scp sftp smb smbs smtp smtps telnet tftp 
-    Features: AsynchDNS HTTP2 HTTPS-proxy IDN IPv6 Largefile libz NTLM NTLM_WB PSL SSL TLS-SRP UnixSockets
+    Features: alt-svc AsynchDNS brotli HTTP2 HTTP3 HTTPS-proxy IDN IPv6 Largefile libz NTLM NTLM_WB PSL SSL UnixSockets
+
+Added [Litespeed lsquic library](https://github.com/litespeedtech/lsquic) too for QUIC and HTTP/3 supported `http_server` and `http_client` tools.
+
+```
+http_client -s www.google.com -M HEAD -p / -o version=Q046
+HTTP/1.1 200 OK
+date: Wed, 18 Sep 2019 18:09:48 GMT
+expires: -1
+cache-control: private, max-age=0
+content-type: text/html; charset=ISO-8859-1
+p3p: CP="This is not a P3P policy! See g.co/p3phelp for more info."
+server: gws
+x-xss-protection: 0
+x-frame-options: SAMEORIGIN
+set-cookie: 1P_JAR=2019-09-18-18; expires=Fri, 18-Oct-2019 18:09:48 GMT; path=/; domain=.google.com; SameSite=none
+set-cookie: NID=188=IaODhxOd3qVnNei0GPaklMcSc5Ww8cDKCmBWm4APgvg6xKZzIgbt0CLIhu0J9TmfAOUCXH440qB4wqW1E0zOSM9IZ2pUVdNSVRHCzxJdv2_JPHQCfDGO38whdjbSlPYMnH1FUyRe-LWuTZOtxVONbstvAsjBoLKUP9hLTwdk0Zw; expires=Thu, 19-Mar-2020 18:09:48 GMT; path=/; domain=.google.com; HttpOnly
+alt-svc: quic=":443"; ma=2592000; v="46,43,39"
+accept-ranges: none
+vary: Accept-Encoding
+```
 
 Also installed [Cipherscan SSL tool](https://github.com/jvehent/cipherscan), [testssl.sh tool](https://github.com/drwetter/testssl.sh), [h2spec](https://github.com/summerwind/h2spec) and [ssllabs-scan tool](https://github.com/ssllabs/ssllabs-scan/), [is-http2-cli](https://github.com/stefanjudis/is-http2-cli), [h2i](https://github.com/bradfitz/http2/tree/master/h2i) and [Mozilla TLS Observatory](https://github.com/mozilla/tls-observatory).
 

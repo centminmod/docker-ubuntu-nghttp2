@@ -12,7 +12,8 @@ install() {
   rm -rf quiche
   git clone --recursive https://github.com/cloudflare/quiche
   cd /usr/local/src/quiche
-  git checkout 89d0317
+  # h3-22 rollback
+  # git checkout 89d0317
   cd /usr/local/src/quiche/deps/boringssl
   rm -rf build
   mkdir -p build
@@ -75,9 +76,15 @@ install() {
   ls -lah /quiche/target/release
   echo
   # export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu:/usr/local/src/quiche/target/release'
-  echo "./configure LDFLAGS=\"-Wl,-rpath,$PWD/../quiche/target/release\" --with-ssl=$PWD/../quiche/deps/boringssl/.openssl --with-quiche=$PWD/../quiche/target/release --with-brotli --with-libssh2"
-  ./configure LDFLAGS="-Wl,-rpath,$PWD/../quiche/target/release" --with-quiche=$PWD/../quiche/target/release --with-ssl=$PWD/../quiche/deps/boringssl/.openssl --with-brotli --with-libssh2
+  echo "./configure LDFLAGS=\"-Wl,-rpath,$PWD/../quiche/target/release\" --with-ssl=$PWD/../quiche/deps/boringssl/.openssl --with-quiche=$PWD/../quiche/target/release --with-brotli --with-libssh2 --enable-alt-svc"
+  ./configure LDFLAGS="-Wl,-rpath,$PWD/../quiche/target/release" --with-quiche=$PWD/../quiche/target/release --with-ssl=$PWD/../quiche/deps/boringssl/.openssl --with-brotli --with-libssh2 --enable-alt-svc
   make -j$(nproc)
+  echo
+  lib/mk-ca-bundle.pl -f
+  # export CURL_CA_BUNDLE=/usr/local/src/curl/ca-bundle.crt
+  update-ca-certificates
+  ls -lah /etc/ssl/certs/ca-certificates.crt
+  echo
   /usr/local/src/curl/src/curl -V
   alias curl-http3="export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu';/usr/local/src/curl/src/curl"
   if [ ! "$(grep 'alias curl-http3' /root/.bashrc)" ]; then
@@ -86,6 +93,22 @@ install() {
   echo
   # curl-http3 -V
   # echo
+  echo "tests"
+  echo
+  echo "curl-http3 --http3 -4Iv https://www.litespeedtech.com"
+  # /usr/local/src/curl/src/curl --http3 -4Iv https://www.litespeedtech.com
+  echo
+  echo "curl-http3 --http3 -4Iv https://www.facebook.com"
+  # /usr/local/src/curl/src/curl --http3 -4Iv https://www.facebook.com
+  echo
+  echo "curl-http3 --http3 -4Iv https://geekflare.com"
+  # /usr/local/src/curl/src/curl --http3 -4Iv https://geekflare.com
+  # echo
+  # echo "curl-http3 --http3 -4Iv https://quic.tech:4433/"
+  # /usr/local/src/curl/src/curl --http3 -4Iv https://quic.tech:4433/
+  echo
+  echo "curl-http3 --http3 -4Iv https://cloudflare-quic.com:443"
+  # /usr/local/src/curl/src/curl --http3 -4Iv https://cloudflare-quic.com:443  
 }
 
 install
