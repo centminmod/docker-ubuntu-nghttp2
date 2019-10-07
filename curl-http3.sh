@@ -6,7 +6,9 @@ install() {
   export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu'
   export GOROOT=/usr/local/go
   export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/go/bin
-  apt-get -y install build-essential autoconf libtool pkg-config libev-dev cmake libunwind-dev cargo brotli libbrotli-dev && apt-get clean && apt-get autoclean && apt-get remove
+  apt-get -y install build-essential autoconf libtool pkg-config libev-dev cmake libunwind-dev brotli libbrotli-dev && apt-get -y remove rustc && apt-get clean && apt-get autoclean && apt-get remove
+  curl https://sh.rustup.rs -sSf | sh -s -- -y
+  source $HOME/.cargo/env
   # apt-get -y install build-essential autoconf libtool pkg-config libev-dev cmake libunwind-dev golang cargo && apt-get clean && apt-get autoclean && apt-get remove
   cd /usr/local/src
   rm -rf quiche
@@ -14,6 +16,7 @@ install() {
   cd /usr/local/src/quiche
   # h3-22 rollback
   # git checkout 89d0317
+  # git checkout d646a60b
   cd /usr/local/src/quiche/deps/boringssl
   rm -rf build
   mkdir -p build
@@ -40,9 +43,9 @@ install() {
   \cp -af /usr/local/src/quiche/include/*.h /usr/include/x86_64-linux-gnu
   \cp -af /usr/local/src/quiche/target/release/deps/libquiche.so /usr/lib/x86_64-linux-gnu
   \cp -af /usr/local/src/quiche/target/release/deps/libquiche.a /usr/lib/x86_64-linux-gnu
-  export PATH="/usr/local/quiche/bin/:${PATH}"
-  if [ ! "$(grep '/usr/local/quiche/bin' /root/.bashrc)" ]; then
-    echo 'export PATH="/usr/local/quiche/bin/:${PATH}"' >> /root/.bashrc;
+  export PATH="$HOME/.cargo/bin:/usr/local/quiche/bin/:${PATH}"
+  if [ ! "$(grep "\$HOME/.cargo/bin:/usr/local/quiche/bin" /root/.bashrc)" ]; then
+    echo 'export PATH="$HOME/.cargo/bin:/usr/local/quiche/bin/:${PATH}"' >> /root/.bashrc;
   fi
   echo
   echo "/usr/local/quiche/bin/http3-server -h"
@@ -63,6 +66,7 @@ install() {
   git clone https://github.com/curl/curl
   cd curl
   # git checkout 00da8341
+  # git checkout 1c134e9
   make clean
   ./buildconf
   echo
