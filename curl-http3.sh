@@ -8,6 +8,9 @@ install() {
   export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/go/bin
   apt-get -y install build-essential autoconf libtool pkg-config libev-dev cmake libunwind-dev brotli libbrotli-dev && apt-get -y remove rustc && apt-get clean && apt-get autoclean && apt-get remove
   curl https://sh.rustup.rs -sSf | sh -s -- -y
+  if [ -f /root/.cargo/bin/rustc ]; then
+    rustup update
+  fi
   source $HOME/.cargo/env
   # apt-get -y install build-essential autoconf libtool pkg-config libev-dev cmake libunwind-dev golang cargo && apt-get clean && apt-get autoclean && apt-get remove
   cd /usr/local/src
