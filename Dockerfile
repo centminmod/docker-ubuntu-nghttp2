@@ -17,7 +17,7 @@ RUN cd ~; wget --no-check-certificate https://github.com/summerwind/h2spec/relea
 
 COPY curl-http3.sh /tmp/curl-http3.sh
 COPY lsquic.sh /tmp/lsquic.sh
-RUN chmod +x /tmp/curl-http3.sh; /tmp/curl-http3.sh; chmod +x /tmp/lsquic.sh; /tmp/lsquic.sh
+RUN chmod +x /tmp/curl-http3.sh; /tmp/curl-http3.sh; chmod +x /tmp/lsquic.sh; /tmp/lsquic.sh; go get -u github.com/cloudflare/cfssl/cmd/cfssl-certinfo; ln -s /go/bin/cfssl-certinfo /usr/local/bin/certinfo
 
 # /usr/bin/cipherscan
 # /usr/local/bin/nghttp --version
@@ -30,3 +30,4 @@ RUN chmod +x /tmp/curl-http3.sh; /tmp/curl-http3.sh; chmod +x /tmp/lsquic.sh; /t
 # /go/bin/h2spec --help or /usr/bin/h2spec --help
 # /go/bin/h2i or /usr/bin/h2i --help
 # /go/bin/tlsobs or /usr/bin/tlsobs --help
+# /go/bin/cfssl-certinfo
