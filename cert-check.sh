@@ -17,7 +17,9 @@ certcheck() {
     TLSPROTOCOL_H1=NA
   fi
 
-  certinfo -domain $domain | jq -r '"\(.subject.common_name)|\(.serial_number)|\(.issuer.organization)|\(.not_after)|\(.sans)"' | awk -v v3=$TLSPROTOCOL_H3 -v v2=$TLSPROTOCOL_H2 -v v1=$TLSPROTOCOL_H1 '{print $0"|"v3"|"v2"|"v1}'
+  snumber=$(certinfo -domain $domain | jq -r '"\(.serial_number)"')
+  serial_hex=$(echo "obase=16; $snumber" | bc)
+  certinfo -domain $domain | jq -r '"\(.subject.common_name)|\(.serial_number)|\(.issuer.organization)|\(.not_after)|\(.sans)"' | awk -v v3=$TLSPROTOCOL_H3 -v v2=$TLSPROTOCOL_H2 -v v1=$TLSPROTOCOL_H1 -v sn=$serial_hex '{print $0"|"v3"|"v2"|"v1"|"sn}'
 }
 
 case "$1" in
