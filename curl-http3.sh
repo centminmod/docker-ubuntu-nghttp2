@@ -35,8 +35,8 @@ install() {
   ln -s $PWD/include .openssl
   # Build quiche:
   cd ../..
-  echo "QUICHE_BSSL_PATH=$PWD/deps/boringssl cargo build --release --examples --features pkg-config-meta"
-  QUICHE_BSSL_PATH=$PWD/deps/boringssl cargo build --release --examples --features pkg-config-meta
+  echo "QUICHE_BSSL_PATH=$PWD/deps/boringssl cargo build --release --examples --features pkg-config-meta --features qlog"
+  QUICHE_BSSL_PATH=$PWD/deps/boringssl cargo build --release --examples --features pkg-config-meta --features qlog
   mkdir -p /usr/local/quiche/bin/
   \cp -af /usr/local/src/quiche/target/release/examples/http3-client /usr/local/quiche/bin/
   \cp -af /usr/local/src/quiche/target/release/examples/http3-server /usr/local/quiche/bin/
