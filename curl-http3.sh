@@ -9,7 +9,7 @@ install() {
   apt-get -y install build-essential autoconf libtool pkg-config libev-dev cmake libunwind-dev brotli libbrotli-dev && apt-get -y remove rustc && apt-get clean && apt-get autoclean && apt-get remove
   curl https://sh.rustup.rs -sSf | sh -s -- -y
   if [ -f /root/.cargo/bin/rustc ]; then
-    rustup update
+    /root/.cargo/bin/rustup update
   fi
   source $HOME/.cargo/env
   # apt-get -y install build-essential autoconf libtool pkg-config libev-dev cmake libunwind-dev golang cargo && apt-get clean && apt-get autoclean && apt-get remove
@@ -17,9 +17,9 @@ install() {
   rm -rf quiche
   git clone --recursive https://github.com/cloudflare/quiche
   cd /usr/local/src/quiche
-  # h3-22 rollback
-  # git checkout 89d0317
-  # git checkout d646a60b
+  mkdir -p deps/boringssl/src/lib
+  # h3-27 hang rollback
+  # git checkout a46dffa
   cd /usr/local/src/quiche/deps/boringssl
   rm -rf build
   mkdir -p build
@@ -35,8 +35,9 @@ install() {
   ln -s $PWD/include .openssl
   # Build quiche:
   cd ../..
-  echo "QUICHE_BSSL_PATH=$PWD/deps/boringssl cargo build --release --examples --features pkg-config-meta --features qlog"
-  QUICHE_BSSL_PATH=$PWD/deps/boringssl cargo build --release --examples --features pkg-config-meta --features qlog
+  echo "cargo build --release --examples --features pkg-config-meta,qlog"
+  cargo build --release --examples --features pkg-config-meta,qlog
+  ln -vnf $(find target/release -name libcrypto.a -o -name libssl.a) deps/boringssl/src/lib/
   mkdir -p /usr/local/quiche/bin/
   \cp -af /usr/local/src/quiche/target/release/examples/http3-client /usr/local/quiche/bin/
   \cp -af /usr/local/src/quiche/target/release/examples/http3-server /usr/local/quiche/bin/
@@ -83,8 +84,8 @@ install() {
   ls -lah /quiche/target/release
   echo
   # export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu:/usr/local/src/quiche/target/release'
-  echo "./configure LDFLAGS=\"-Wl,-rpath,$PWD/../quiche/target/release\" --with-ssl=$PWD/../quiche/deps/boringssl/.openssl --with-quiche=$PWD/../quiche/target/release --with-brotli --with-libssh2 --enable-alt-svc"
-  ./configure LDFLAGS="-Wl,-rpath,$PWD/../quiche/target/release" --with-quiche=$PWD/../quiche/target/release --with-ssl=$PWD/../quiche/deps/boringssl/.openssl --with-brotli --with-libssh2 --enable-alt-svc
+  echo "./configure LDFLAGS=\"-Wl,-rpath,$PWD/../quiche/target/release\" --with-ssl=$PWD/../quiche/deps/boringssl/src --with-quiche=$PWD/../quiche/target/release --with-brotli --with-libssh2 --enable-alt-svc"
+  ./configure LDFLAGS="-Wl,-rpath,$PWD/../quiche/target/release" --with-quiche=$PWD/../quiche/target/release --with-ssl=$PWD/../quiche/deps/boringssl/src --with-brotli --with-libssh2 --enable-alt-svc
   make -j$(nproc)
   echo
   lib/mk-ca-bundle.pl -f
