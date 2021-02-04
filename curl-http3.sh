@@ -15,6 +15,7 @@ zstd_install() {
   make clean
   make -j$(nproc)
   make install
+  rm -rf /usr/local/src/zstd-${ZSTD_VER}
   popd
 }
 
