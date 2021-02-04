@@ -1,12 +1,31 @@
 #!/bin/bash
 # install custom curl-http3 binary to support HTTP/3 via Cloudflare Quiche
+ZSTD_VER=1.4.8
+
+zstd_install() {
+  echo
+  echo "zstd install"
+  echo
+  pushd /usr/local/src
+  rm -f zstd-${ZSTD_VER}.tar.gz
+  rm -rf /usr/local/src/zstd-${ZSTD_VER}
+  wget -4 -c https://github.com/facebook/zstd/archive/v${ZSTD_VER}.tar.gz -O zstd-${ZSTD_VER}.tar.gz --tries=3
+  tar xvzf zstd-${ZSTD_VER}.tar.gz
+  cd zstd-${ZSTD_VER}
+  make clean
+  make -j$(nproc)
+  make install
+  popd
+}
 
 install() {
   export CFLAGS=' -Wimplicit-fallthrough=0 -Wno-implicit-function-declaration'
-  export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu'
+  export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig;/usr/lib/x86_64-linux-gnu/pkgconfig"
+  export LD_LIBRARY_PATH='/usr/local/lib;/usr/lib/x86_64-linux-gnu'
   export GOROOT=/usr/local/go
   export PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/local/go/bin:/usr/local/go/bin:/usr/local/go/bin
-  apt-get -y install build-essential autoconf libtool pkg-config libev-dev cmake libunwind-dev brotli libbrotli-dev && apt-get -y remove rustc && apt-get clean && apt-get autoclean && apt-get remove
+  apt-get -y install build-essential autoconf libtool pkg-config libev-dev cmake libunwind-dev brotli libbrotli-dev libzstd-dev zstd tar lz4 liblz4-dev && apt-get -y remove rustc && apt-get clean && apt-get autoclean && apt-get remove
+  zstd_install
   curl https://sh.rustup.rs -sSf | sh -s -- -y
   if [ -f /root/.cargo/bin/rustc ]; then
     /root/.cargo/bin/rustup update
@@ -19,7 +38,10 @@ install() {
   cd /usr/local/src/quiche
   mkdir -p deps/boringssl/src/lib
   # h3-27 hang rollback
-  # git checkout a46dffa
+  # quiche 0.7.0
+  # git checkout 5092e4d
+  # quiche 0.6.0
+  # git checkout fd5e028
   cd /usr/local/src/quiche/deps/boringssl
   rm -rf build
   mkdir -p build
@@ -35,8 +57,8 @@ install() {
   ln -s $PWD/include .openssl
   # Build quiche:
   cd ../..
-  echo "cargo build --release --examples --features pkg-config-meta,qlog"
-  cargo build --release --examples --features pkg-config-meta,qlog
+  echo "cargo build --release --examples --features ffi,pkg-config-meta,qlog"
+  cargo build --release --examples --features ffi,pkg-config-meta,qlog
   ln -vnf $(find target/release -name libcrypto.a -o -name libssl.a) deps/boringssl/src/lib/
   mkdir -p /usr/local/quiche/bin/
   \cp -af /usr/local/src/quiche/target/release/examples/http3-client /usr/local/quiche/bin/
@@ -71,6 +93,8 @@ install() {
   cd curl
   # git checkout 00da8341
   # git checkout 1c134e9
+  # 7.74
+  # git checkout e052859
   make clean
   ./buildconf
   echo
@@ -84,8 +108,8 @@ install() {
   ls -lah /quiche/target/release
   echo
   # export LD_LIBRARY_PATH='/usr/lib/x86_64-linux-gnu:/usr/local/src/quiche/target/release'
-  echo "./configure LDFLAGS=\"-Wl,-rpath,$PWD/../quiche/target/release\" --with-ssl=$PWD/../quiche/deps/boringssl/src --with-quiche=$PWD/../quiche/target/release --with-brotli --with-libssh2 --enable-alt-svc"
-  ./configure LDFLAGS="-Wl,-rpath,$PWD/../quiche/target/release" --with-quiche=$PWD/../quiche/target/release --with-ssl=$PWD/../quiche/deps/boringssl/src --with-brotli --with-libssh2 --enable-alt-svc
+  echo "./configure LDFLAGS=\"-Wl,-rpath,$PWD/../quiche/target/release\" --with-ssl=$PWD/../quiche/deps/boringssl/src --with-quiche=$PWD/../quiche/target/release --with-brotli --with-zstd --with-libssh2 --enable-alt-svc"
+  ./configure LDFLAGS="-Wl,-rpath,$PWD/../quiche/target/release" --with-quiche=$PWD/../quiche/target/release --with-ssl=$PWD/../quiche/deps/boringssl/src --with-brotli --with-zstd --with-libssh2 --enable-alt-svc
   make -j$(nproc)
   echo
   lib/mk-ca-bundle.pl -f
@@ -116,7 +140,7 @@ install() {
   # /usr/local/src/curl/src/curl --http3 -4Iv https://quic.tech:4433/
   echo
   echo "curl-http3 --http3 -4Iv https://cloudflare-quic.com:443"
-  # /usr/local/src/curl/src/curl --http3 -4Iv https://cloudflare-quic.com:443  
+  # /usr/local/src/curl/src/curl --http3 -4Iv https://cloudflare-quic.com:443
 }
 
 install
