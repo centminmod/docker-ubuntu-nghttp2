@@ -1,4 +1,4 @@
-FROM ubuntu:hirsute
+FROM ubuntu:20.04
 MAINTAINER George Liu <https://github.com/centminmod/docker-ubuntu-nghttp2>
 # Setup HTTP/2 nghttp2 on Ubuntu 19.x
 ARG BUILD_DATE
